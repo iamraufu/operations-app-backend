@@ -87,7 +87,7 @@ const users = async (req, res) => {
       try {
             const allUsers = await UserModel.find({ isDeleted: false })
 
-            res.send({
+            res.status(200).json({
                   status: true,
                   users: allUsers
             })
@@ -115,7 +115,7 @@ const user = async (req, res) => {
       try {
             const singleUser = await UserModel.find({ _id: id })
 
-            res.send({
+            res.status(200).json({
                   status: true,
                   user: singleUser
             })

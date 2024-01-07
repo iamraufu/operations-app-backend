@@ -11,6 +11,13 @@ app.use(cors(), express.json({ limit: '50mb' }))
 
 const port = process.env.PORT || 5000;
 
+app.get('/health', (req, res) => {
+      res.status(200).json({
+            status: true,
+            message: "OK"
+      })
+})
+
 app.use((req, res, next) => {
       console.log(req.path, req.method);
       next();
