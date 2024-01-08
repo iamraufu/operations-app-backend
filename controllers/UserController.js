@@ -113,7 +113,7 @@ const user = async (req, res) => {
       }
 
       try {
-            const singleUser = await UserModel.find({ _id: id })
+            const singleUser = await UserModel.findById(id)
 
             res.status(200).json({
                   status: true,
