@@ -25,7 +25,6 @@ const register = async (req, res) => {
                               status: true,
                               message: "User created successfully!",
                               token: jwt.sign({
-                                    _id: user._id,
                                     name: user.name,
                                     email: user.email,
                                     role: user.role,
@@ -62,7 +61,6 @@ const login = async (req, res) => {
       else {
             let token = jwt.sign(
                   {
-                        _id: user._id,
                         email: user.email,
                         name: user.name,
                         role: user.role

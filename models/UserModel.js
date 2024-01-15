@@ -3,7 +3,7 @@ const mongoose = require("mongoose")
 const userSchema = new mongoose.Schema({
       name: {
             type: String,
-            trim:true,
+            trim: true,
             required: true
       },
       email: {
@@ -14,12 +14,18 @@ const userSchema = new mongoose.Schema({
       },
       password: {
             type: String,
-            min:8,
+            min: 8,
             required: true
       },
       role: {
             type: String,  // admin or user
             default: "user",
+      },
+      hasPermission: {
+            type: Array,
+            of: String,   // array of strings that represent the permissions a user has
+            default: [],
+            required: true
       },
       isDeleted: {
             type: Boolean,
