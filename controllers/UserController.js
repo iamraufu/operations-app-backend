@@ -50,6 +50,15 @@ const register = async (req, res) => {
 const login = async (req, res) => {
       const { email, password } = req.body
       const user = await UserModel.findOne({ email })
+      const userExist = Boolean(await UserModel.findOne({ email }))
+
+      if (!userExist) {
+            return res.status(401).json({
+                  status: false,
+                  message: `User doesn't exist`
+            })
+      }
+
       const isPasswordValid = await bcrypt.compare(password, user.password)
 
       if (!user || !isPasswordValid) {
@@ -137,11 +146,11 @@ const update = async (req, res) => {
                   message: `User Id incorrect`
             })
       }
-      
+
       if (req.body.password) {
             const salt = await bcrypt.genSalt(10);
             const passwordHash = await bcrypt.hash(req.body.password, salt);
-            
+
             userDetails = {
                   ...req.body,
                   password: passwordHash,
