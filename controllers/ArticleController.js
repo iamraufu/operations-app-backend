@@ -16,7 +16,7 @@ const products = async (req, res) => {
 
                   res.status(200).json({
                         status: true,
-                        products
+                        articles: products
                   })
             }
             catch (err) {
@@ -34,24 +34,15 @@ const singleProduct = async (req, res) => {
       const fetchData = async () => {
 
             try {
-                  const response = await fetch('http://202.74.246.133:81/sap/outlet_automation/get_material_description.php',{
-                        method:"POST",
+                  const response = await fetch('http://202.74.246.133:81/sap/outlet_automation/get_material_description.php', {
+                        method: "POST",
                         body: JSON.stringify({
                               material: req.params.material
                         })
                   })
                   const data = await response.json()
 
-                  // const products = data.MATNRLIST.map(product => (
-                  //       {
-                  //             code: product.MATERIAL.trim(),
-                  //             description: product.MATL_DESC.trim()
-                  //       }
-                  // ))
-
-                  console.log(data);
-
-                  if(data.RETURN.TYPE === 'E'){
+                  if (data.RETURN.TYPE === 'E') {
                         res.status(404).json({
                               status: false,
                               message: `No Article Found with material code ${req.params.material}`
@@ -60,7 +51,16 @@ const singleProduct = async (req, res) => {
                   else {
                         res.status(200).json({
                               status: true,
-                              data
+                              article: {
+                                    code: req.params.material,
+                                    description: data.MATERIAL_GENERAL_DATA.MATL_DESC.trim(),
+                                    uom: data.MATERIAL_GENERAL_DATA.BASE_UOM.trim(),
+                                    unit: data.MATERIAL_GENERAL_DATA.UNIT_OF_WT.trim(),
+                                    materialGroup: data.MATERIAL_GENERAL_DATA.MATL_GROUP.trim(),
+                                    materialType: data.MATERIAL_GENERAL_DATA.MATL_TYPE.trim(),
+                                    barcode: data.MATERIAL_GENERAL_DATA.EAN_UPC.trim() ?
+                                          data.MATERIAL_GENERAL_DATA.EAN_UPC.trim() : req.params.material
+                              }
                         })
                   }
             }
