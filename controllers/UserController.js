@@ -106,6 +106,56 @@ const users = async (req, res) => {
       }
 }
 
+// GET all deleted users
+const deletedUsers = async (req, res) => {
+      try {
+            const allUsers = await UserModel.find({ isDeleted: true })
+
+            res.status(200).json({
+                  status: true,
+                  users: allUsers
+            })
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            })
+      }
+}
+
+// GET all user preferences
+const userPreferences = async (req, res) => {
+
+      try {
+            await UserModel.find({}, 'role hasPermission').exec()
+                .then(users => {
+                    const userRolesAndPermissions = {
+                        roles: [...new Set(users.map(user => user.role))],
+                        permissions: [...new Set(users.reduce((acc, user) => acc.concat(user.hasPermission), []))]
+                    };
+
+                    res.status(200).json({
+                        status: true,
+                        preferences: userRolesAndPermissions
+                    });
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        status: false,
+                        message: `${err}`
+                    });
+                });
+        
+        } catch (err) {
+            res.status(500).json({
+                status: false,
+                message: `${err}`
+            });
+        }
+        
+}
+
 // GET user by Id
 const user = async (req, res) => {
 
@@ -184,6 +234,8 @@ module.exports = {
       register,
       login,
       users,
+      deletedUsers,
+      userPreferences,
       user,
       update
 }

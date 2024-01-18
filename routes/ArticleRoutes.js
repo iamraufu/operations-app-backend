@@ -1,12 +1,14 @@
 const express = require('express')
 const router = express.Router()
 
-const { tokenVerify } = require('../utilities/tokenVerify')
+// const { tokenVerify } = require('../utilities/tokenVerify')
 
 const {
-      products
+      products,
+      singleProduct
 } = require('../controllers/ArticleController')
 
-router.get('/', tokenVerify, products)
+router.get('/', products)
+router.get('/:material', singleProduct)
 
 module.exports = router
