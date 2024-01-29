@@ -6,6 +6,8 @@ const { connectDB } = require('./database/connection');
 const UserRoutes = require('./routes/UserRoutes')
 const OutletRoutes = require('./routes/OutletRoutes')
 const ArticleRoutes = require('./routes/ArticleRoutes')
+const ProductShelvingRoutes = require('./routes/ProductShelvingRoutes')
+const PORoutes = require('./routes/PORoutes')
 
 require('dotenv').config()
 
@@ -28,6 +30,10 @@ app.get('/health', (req, res) => {
 app.use("/api/user", UserRoutes) // User API
 app.use("/bapi/outlet", OutletRoutes) // Outlet API
 app.use("/bapi/article", ArticleRoutes) // Article API
+app.use("/bapi/po", PORoutes) // PO API
+
+// Receiving Module
+app.use('/api/product-shelving', ProductShelvingRoutes) // Product Shelving API
 
 connectDB()
 
