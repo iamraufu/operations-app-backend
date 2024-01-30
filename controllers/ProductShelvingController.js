@@ -4,13 +4,31 @@ const mongoose = require('mongoose')
 // Assign a product to ready for shelving
 const assignToReadyForShelving = async (req, res) => {
       try {
-            const data = await ProductShelvingModel.create(req.body)
+            const { po, code, quantity } = req.body
+            const filter = {
+                  po,
+                  code,
+                  quantity
+            }
 
-            return res.status(201).send({
-                  status: true,
-                  message: `Material ${req.body.code} is ready for shelving`,
-                  data
-            })
+            const isAlreadyReadyForShelving = Boolean(await ProductShelvingModel.findOne(filter))
+
+            if (isAlreadyReadyForShelving) {
+                  return res.status(409).send({
+                        status: false,
+                        message: `Material ${code} with quantity of ${quantity} of PO ${po} has already been assigned.`
+                  })
+            }
+            else {
+                  const data = await ProductShelvingModel.create(req.body)
+
+                  return res.status(201).send({
+                        status: true,
+                        message: `Material ${code} is ready for shelving`,
+                        data
+                  })
+            }
+
       }
       catch (err) {
             res.status(500).json({
@@ -51,7 +69,7 @@ const updateProductInShelf = async (req, res) => {
             const receivedQuantity = readyForShelvingProduct.receivedQuantity
 
             if (quantity > receivedQuantity) {
-                  return res.status(400).json({
+                  return res.status(409).json({
                         status: false,
                         message: `Input Quantity and Shelf Quantity Exceed the received quantity.`
                   })

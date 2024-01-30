@@ -31,8 +31,6 @@ app.use("/api/user", UserRoutes) // User API
 app.use("/bapi/outlet", OutletRoutes) // Outlet API
 app.use("/bapi/article", ArticleRoutes) // Article API
 app.use("/bapi/po", PORoutes) // PO API
-
-// Receiving Module
 app.use('/api/product-shelving', ProductShelvingRoutes) // Product Shelving API
 
 connectDB()
