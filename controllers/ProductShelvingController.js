@@ -127,7 +127,7 @@ const getInShelf = async (req, res) => {
 }
 
 const search = async (req, res, status) => {
-      console.log(req.query);
+      
       let filter = {
             status
       };
@@ -135,12 +135,10 @@ const search = async (req, res, status) => {
             filter[req.query.filterBy] = req.query.value;
       }
 
-      console.log(filter);
       const pageSize = +req.query.pageSize || 10;
       const currentPage = +req.query.currentPage || 1;
       const sortBy = req.query.sortBy || '_id'; // _id or description or code or po or etc.
       const sortOrder = req.query.sortOrder || 'desc'; // asc or desc
-      console.log(sortBy);
 
       const totalItems = await ProductShelvingModel.find(filter).countDocuments();
       const items = await ProductShelvingModel.find(filter)
@@ -150,11 +148,24 @@ const search = async (req, res, status) => {
             .exec();
 
       const responseObject = {
+            status: true,
             items,
             totalPages: Math.ceil(totalItems / pageSize),
             totalItems
       };
-      return res.status(200).json(responseObject);
+
+      if(items.length) {
+            return res.status(200).json(responseObject);
+      }
+
+      else {
+            return res.status(401).json({
+                  status: false,
+                  message:"Nothing found",
+                  items
+            });
+      }
+
 }
 
 module.exports = {
