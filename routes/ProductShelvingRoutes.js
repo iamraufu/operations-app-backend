@@ -6,11 +6,15 @@ const { tokenVerify } = require('../utilities/tokenVerify')
 const {
       assignToReadyForShelving,
       getReadyForShelving,
-      updateProductInShelf
+      updateProductInShelf,
+      getPartiallyInShelf,
+      getInShelf
 } = require('../controllers/ProductShelvingController')
 
 router.post('/ready', tokenVerify, assignToReadyForShelving)
 router.get('/ready', tokenVerify, getReadyForShelving)
 router.post('/in-shelf/:id', tokenVerify, updateProductInShelf)
+router.get('/partially-in-shelf', tokenVerify, getPartiallyInShelf)
+router.get('/in-shelf', tokenVerify, getInShelf)
 
 module.exports = router

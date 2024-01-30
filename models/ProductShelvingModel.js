@@ -31,8 +31,7 @@ const productShelvingSchema = new mongoose.Schema({
             required: true
       },
       name: {
-            type: String,
-            required: true
+            type: String
       },
       quantity: {
             type: Number,
