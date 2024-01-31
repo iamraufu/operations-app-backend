@@ -48,6 +48,24 @@ const productShelvingSchema = new mongoose.Schema({
             required: true,
             default: "ready for shelving"
       },
+      bins: {
+            type: [
+                  {
+                        bin_id: {
+                              type: String,
+                              required: true,
+                              default: ""
+                        },
+                        gondola_id: {
+                              type: String,
+                              required: true,
+                              default: ""
+                        }
+                  }
+            ],
+            required: true,
+            default: []
+      },
       inShelf: {
             type: [{
                   gondola: {
