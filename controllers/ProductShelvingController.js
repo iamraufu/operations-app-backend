@@ -56,7 +56,7 @@ const updateProductInShelf = async (req, res) => {
 
       try {
             const { id } = req.params
-
+            
             if (!mongoose.Types.ObjectId.isValid(id)) {
                   return res.status(404).json({
                         status: false,
@@ -65,6 +65,14 @@ const updateProductInShelf = async (req, res) => {
             }
 
             let readyForShelvingProduct = await ProductShelvingModel.findById(id)
+
+            if(readyForShelvingProduct === null){
+                  return res.status(404).json({
+                        status: false,
+                        message: `Product Id incorrect`
+                  })
+            }
+
             const quantity = readyForShelvingProduct.inShelf.reduce((a, c) => a + c.quantity, 0) + req.body.quantity
             const receivedQuantity = readyForShelvingProduct.receivedQuantity
 
