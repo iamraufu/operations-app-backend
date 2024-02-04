@@ -1,4 +1,4 @@
-const OutletModel = require('../models/OutletModel');
+// const OutletModel = require('../models/OutletModel');
 
 const outlets = async (req, res) => {
 
@@ -8,14 +8,14 @@ const outlets = async (req, res) => {
                   const response = await fetch('http://202.74.246.133:81/sap/outlet_automation/get_outlets.php')
                   const data = await response.json()
 
-                  const outlets = data.IT_SITE.map(outlet => (
+                  const outlets = await data.IT_SITE.length > 0 ? await data.IT_SITE.map(outlet => (
                         {
                               code: outlet.WERKS.trim(),
                               name: outlet.NAME1.trim(),
                               address: outlet.STRAS.trim(),
                               district: outlet.ORT01.trim()
                         }
-                  ))
+                  )) : []
 
                   // outlets.forEach(async (outlet) => {
                   //       try {

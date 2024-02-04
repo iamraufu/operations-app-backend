@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 // Assign a product to ready for shelving
 const assignToReadyForShelving = async (req, res) => {
       try {
-            const { po, code, quantity } = req.body
+            const { po, code, quantity, receivedQuantity } = req.body
             const filter = {
                   po,
                   code,
@@ -17,6 +17,12 @@ const assignToReadyForShelving = async (req, res) => {
                   return res.status(409).send({
                         status: false,
                         message: `Material ${code} with quantity of ${quantity} of PO ${po} has already been assigned.`
+                  })
+            }
+            else if(receivedQuantity > quantity){
+                  return res.status(409).send({
+                        status: false,
+                        message: `Received Quantity ${receivedQuantity} cannot exceed PO Quantity ${quantity}`
                   })
             }
             else {

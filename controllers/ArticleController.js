@@ -1,4 +1,4 @@
-const ArticleModel = require('../models/ArticleModel')
+// const ArticleModel = require('../models/ArticleModel')
 
 const products = async (req, res) => {
       const fetchData = async () => {
@@ -7,12 +7,12 @@ const products = async (req, res) => {
                   const response = await fetch('http://202.74.246.133:81/sap/outlet_automation/get_materials.php')
                   const data = await response.json()
 
-                  const products = data.MATNRLIST.map(product => (
+                  const products = data.MATNRLIST.length > 0 ? data?.MATNRLIST.map(product => (
                         {
                               code: product.MATERIAL.trim(),
                               description: product.MATL_DESC.trim()
                         }
-                  ))
+                  )) : []
 
                   res.status(200).json({
                         status: true,
@@ -34,18 +34,19 @@ const singleProduct = async (req, res) => {
       const fetchData = async () => {
 
             try {
-                  const response = await fetch('http://202.74.246.133:81/sap/outlet_automation/get_material_description.php', {
+                  const requestOptions = {
                         method: "POST",
                         body: JSON.stringify({
                               material: req.params.material
                         })
-                  })
+                  }
+                  const response = await fetch('http://202.74.246.133:81/sap/outlet_automation/get_material_description.php', requestOptions)
                   const data = await response.json()
 
-                  if (data.RETURN.TYPE === 'E') {
+                  if (data?.RETURN?.TYPE === 'E') {
                         res.status(404).json({
                               status: false,
-                              message: `No Article Found with material code ${req.params.material}`
+                              message: `${data.RETURN.MESSAGE}`
                         })
                   }
                   else {
