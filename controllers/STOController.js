@@ -1,4 +1,4 @@
-const poDisplay = async (req, res) => {
+const stoDisplay = async (req, res) => {
       try {
             const requestOptions = {
                   method: 'POST',
@@ -30,8 +30,8 @@ const poDisplay = async (req, res) => {
                               supplyingPlantAddress: `${data.PO_ADDRESS.STREET.trim()} ${data.PO_ADDRESS.CITY1.trim()} - ${data.PO_ADDRESS.POST_CODE1.trim()}`,
                               items: data.PO_ITEMS.map(item => (
                                     {
-                                          po: item.PO_NUMBER.trim(),
-                                          poItem: item.PO_ITEM.trim(),
+                                          sto: item.PO_NUMBER.trim(),
+                                          stoItem: item.PO_ITEM.trim(),
                                           changedOn: item.CHANGED_ON.trim(),
                                           material: item.MATERIAL.trim(),
                                           companyCode: item.CO_CODE.trim(),
@@ -44,7 +44,7 @@ const poDisplay = async (req, res) => {
                                           targetQuantity: item.TARGET_QTY,
                                           unit: item.UNIT.trim(),
                                           orderPricingUnit: item.ORDERPR_UN.trim(),
-                                          poUnit: item.PO_UNIT_ISO.trim(),
+                                          stoUnit: item.PO_UNIT_ISO.trim(),
                                           orderPricingUnit: item.ORDERPR_UN_ISO.trim(),
                                           baseUom: item.BASE_UOM_ISO.trim(),
                                           weightUnit: item.WEIGHTUNIT_ISO.trim(),
@@ -73,5 +73,5 @@ const poDisplay = async (req, res) => {
 }
 
 module.exports = {
-      poDisplay
+      stoDisplay
 }

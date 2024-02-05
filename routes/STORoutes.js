@@ -3,8 +3,8 @@ const router = express.Router()
 
 const { tokenVerify } = require('../utilities/tokenVerify')
 
-const { createGRN } = require('../controllers/GRNController')
+const { stoDisplay } = require('../controllers/STOController')
 
-router.post('/create', tokenVerify, createGRN)
+router.post('/display', tokenVerify, stoDisplay)
 
 module.exports = router

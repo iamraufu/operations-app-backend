@@ -8,7 +8,9 @@ const OutletRoutes = require('./routes/OutletRoutes')
 const ArticleRoutes = require('./routes/ArticleRoutes')
 const ProductShelvingRoutes = require('./routes/ProductShelvingRoutes')
 const PORoutes = require('./routes/PORoutes')
+const STORoutes = require('./routes/STORoutes')
 const GRNRoutes = require('./routes/GRNRoutes')
+const DNRoutes = require('./routes/DNRoutes')
 
 require('dotenv').config()
 
@@ -29,10 +31,14 @@ app.get('/health', (req, res) => {
 })
 
 app.use("/api/user", UserRoutes) // User API
+
 app.use("/bapi/outlet", OutletRoutes) // Outlet API
 app.use("/bapi/article", ArticleRoutes) // Article API
 app.use("/bapi/po", PORoutes) // PO API
-app.use("/bapi/grn", GRNRoutes) // PO API
+app.use("/bapi/sto", STORoutes) // STO API
+app.use("/bapi/dn", DNRoutes) // DN API
+app.use("/bapi/grn", GRNRoutes) // GRN API
+
 app.use('/api/product-shelving', ProductShelvingRoutes) // Product Shelving API
 
 connectDB()
