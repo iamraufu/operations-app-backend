@@ -17,7 +17,7 @@ const poDisplay = async (req, res) => {
             else {
                   res.status(200).json({
                         status: true,
-                        message: "Successfully retrieved STO details",
+                        message: "Successfully retrieved PO details",
                         data: {
                               sto: data.PO_HEADER.PO_NUMBER.trim(),
                               companyCode: data.PO_HEADER.CO_CODE.trim(),
