@@ -2,7 +2,7 @@ const poDisplay = async (req, res) => {
       try {
             const requestOptions = {
                   method: 'POST',
-                  body: JSON.stringify({ po: req.body.sto })
+                  body: JSON.stringify({ po: req.body.po })
             }
 
             const response = await fetch('http://202.74.246.133:81/sap/outlet_automation/po_display.php', requestOptions)
