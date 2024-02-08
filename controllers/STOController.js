@@ -7,8 +7,14 @@ const stoDisplay = async (req, res) => {
 
             const response = await fetch('http://202.74.246.133:81/sap/outlet_automation/po_display.php', requestOptions)
             const data = await response.json()
-
-            if (data?.RETURN[0]?.TYPE === 'E') {
+            
+            if(data === 'Could not open connection'){
+                  res.status(503).json({
+                        status: false,
+                        message: `${data}`
+                  })
+            }
+            else if (data?.RETURN[0]?.TYPE === 'E') {
                   res.status(404).json({
                         status: false,
                         message: data.RETURN[0].MESSAGE
