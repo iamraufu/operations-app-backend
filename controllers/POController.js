@@ -1,3 +1,86 @@
+const POTrackingModel = require('../models/POTrackingModel')
+
+const poList = async (req, res) => {
+
+      try {
+
+            const { site, from, to } = req.body
+
+            const requestOptions = {
+                  method: 'POST',
+                  body: JSON.stringify({
+                        sign: "E",
+                        site,
+                        from,
+                        to
+                  })
+            }
+
+            const response = await fetch('http://202.74.246.133:81/sap/outlet_automation/get_po.php', requestOptions)
+            const data = await response.json()
+
+            if (data.PO_FOUND > 0) {
+
+                  const po = await data.PO_DOCUMENT.map(item => item.EBELN_LOW.trim())
+
+                  const items = await data.POLINES.map(item => ({
+                        po: item.EBELN.trim(),
+                        createdOnSAP: item.AEDAT.trim(),
+                        supplyingPlant: data.POHEADER.find(po => po.EBELN === item.EBELN).RESWK.trim(),
+                        receivingPlant: req.body.site,
+                        sku: data.POLINES.filter(s => s.EBELN === item.EBELN).length
+                  }))
+
+                  let list = []
+
+                  items.filter(item => po.map(async po => {
+
+                        if (po === item.po && !doesObjectExistWithId(list, item.po)) {
+                              list.push(item)
+                              const isAlreadyPOInTracking = await POTrackingModel.findOne().where('po').equals(item.po).exec();
+
+                              if (!isAlreadyPOInTracking) {
+                                    await POTrackingModel.create(item)
+                              }
+                        }
+                  }))
+
+                  function doesObjectExistWithId(array, id) {
+                        // Check if any object in the array has the specified ID
+                        return array.some(obj => obj.po === id);
+                  }
+
+                  await res.status(200).json({
+                        status: true,
+                        message: "Successfully tracked PO and retrieved Lists",
+                        data: {
+                              count: data.PO_FOUND,
+                              po: list,
+                        }
+                  })
+            }
+            else if(data.PO_FOUND === 0){
+                  res.status(200).json({
+                        status: false,
+                        message: "No PO found"
+                  })
+            }
+            else if(typeof data === 'string')
+            {
+                  res.status(200).json({
+                        status: false,
+                        message: data
+                  })
+            }
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            })
+      }
+}
+
 const poDisplay = async (req, res) => {
       try {
             const requestOptions = {
@@ -8,7 +91,7 @@ const poDisplay = async (req, res) => {
             const response = await fetch('http://202.74.246.133:81/sap/outlet_automation/po_display.php', requestOptions)
             const data = await response.json()
 
-            if(data === 'Could not open connection'){
+            if (data === 'Could not open connection') {
                   res.status(503).json({
                         status: false,
                         message: `${data}`
@@ -25,7 +108,7 @@ const poDisplay = async (req, res) => {
                         status: true,
                         message: "Successfully retrieved PO details",
                         data: {
-                              sto: data.PO_HEADER.PO_NUMBER.trim(),
+                              po: data.PO_HEADER.PO_NUMBER.trim(),
                               companyCode: data.PO_HEADER.CO_CODE.trim(),
                               documentType: data.PO_HEADER.DOC_TYPE.trim(),
                               createdDate: data.PO_HEADER.CREATED_ON.trim(),
@@ -79,5 +162,6 @@ const poDisplay = async (req, res) => {
 }
 
 module.exports = {
+      poList,
       poDisplay
 }

@@ -59,7 +59,6 @@ const getReadyForShelving = async (req, res) => {
 
 // Update Products in Shelf
 const updateProductInShelf = async (req, res) => {
-
       try {
             const { id } = req.params
             
@@ -179,7 +178,6 @@ const search = async (req, res, status) => {
                   items
             });
       }
-
 }
 
 module.exports = {

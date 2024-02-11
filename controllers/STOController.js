@@ -1,3 +1,86 @@
+const STOTrackingModel = require('../models/STOTrackingModel')
+
+const stoList = async (req, res) => {
+      try {
+            const { site, from, to } = req.body
+
+            const requestOptions = {
+                  method: 'POST',
+                  body: JSON.stringify(
+                        {
+                              sign: "I",
+                              site,
+                              from,
+                              to
+                        }
+                  )
+            }
+
+            const response = await fetch('http://202.74.246.133:81/sap/outlet_automation/get_po.php', requestOptions)
+            const data = await response.json()
+            
+            if (data.PO_FOUND > 0) {
+
+                  const sto = await data.PO_DOCUMENT.map(item => item.EBELN_LOW.trim())
+                  
+
+                  const items = await data.POLINES.map(item => ({
+                        sto: item.EBELN.trim(),
+                        createdOnSAP: item.AEDAT.trim(),
+                        supplyingPlant: data.POHEADER.find(po => po.EBELN === item.EBELN).RESWK,
+                        receivingPlant: req.body.site,
+                        sku: data.POLINES.filter(s => s.EBELN === item.EBELN).length
+                  }))
+
+                  let list = []
+
+                  items.filter(item => sto.map(async sto => {
+
+                        if (sto === item.sto && !doesObjectExistWithId(list, item.sto)) {
+                              list.push(item)
+                              const isAlreadySTOInTracking = await STOTrackingModel.findOne().where('sto').equals(item.sto).exec();
+
+                              if (!isAlreadySTOInTracking) {
+                                    await STOTrackingModel.create(item)
+                              }
+                        }
+                  }))
+
+                  function doesObjectExistWithId(array, id) {
+                        // Check if any object in the array has the specified ID
+                        return array.some(obj => obj.sto === id);
+                  }
+
+                  await res.status(200).json({
+                        status: true,
+                        message: "Successfully tracked STO and retrieved Lists",
+                        data: {
+                              count: data.PO_FOUND,
+                              sto: list,
+                        }
+                  })
+            }
+            else if (data.PO_FOUND === 0) {
+                  res.status(200).json({
+                        status: false,
+                        message: "No STO found"
+                  })
+            }
+            else if (typeof data === 'string') {
+                  res.status(200).json({
+                        status: false,
+                        message: data
+                  })
+            }
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            })
+      }
+}
+
 const stoDisplay = async (req, res) => {
       try {
             const requestOptions = {
@@ -7,8 +90,8 @@ const stoDisplay = async (req, res) => {
 
             const response = await fetch('http://202.74.246.133:81/sap/outlet_automation/po_display.php', requestOptions)
             const data = await response.json()
-            
-            if(data === 'Could not open connection'){
+
+            if (data === 'Could not open connection') {
                   res.status(503).json({
                         status: false,
                         message: `${data}`
@@ -79,5 +162,6 @@ const stoDisplay = async (req, res) => {
 }
 
 module.exports = {
+      stoList,
       stoDisplay
 }

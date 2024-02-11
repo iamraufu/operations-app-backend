@@ -1,11 +1,16 @@
+const STOTrackingModel = require('../models/STOTrackingModel');
+
 const createDN = async (req, res) => {
       try {
+
+            const { sto } = req.body
+
             const requestOptions = {
                   method: 'POST',
                   body: JSON.stringify(
                         {
                               "DeliveryNoteHeader": [{
-                                    "REF_DOC": req.body.sto
+                                    "REF_DOC": sto
                               }],
                               "AuthData": [{
                                     "UserID": "rupom",
@@ -30,8 +35,43 @@ const createDN = async (req, res) => {
                   })
             }
             else {
+
+                  const filter = {
+                        sto
+                  }
+
+                  let STOTracking = await STOTrackingModel.findOne(filter)
+
+                  if (STOTracking === null) {
+                        return res.status(404).json({
+                              status: false,
+                              message: `STO tracking status not updated but converted to DN`,
+                              data: {
+                                    dn: data.DELIVERY.trim(),
+                                    items: data.CREATED_ITEMS.map(item => ({
+                                          sto: item.REF_DOC.trim(),
+                                          stoItem: item.REF_ITEM.trim(),
+                                          dn: item.DELIV_NUMB.trim(),
+                                          dnItem: item.DELIV_ITEM.trim(),
+                                          material: item.MATERIAL.trim(),
+                                          deliveringQuantity: item.DLV_QTY,
+                                          salesQuantity: item.SALES_UNIT.trim(),
+                                          salesUnitISO: item.SALES_UNIT_ISO.trim()
+                                    })
+                                    )
+                              }
+                        })
+                  }
+                  else {
+                        STOTracking.status = "in dn"
+                        STOTracking.dn = data.DELIVERY.trim()
+                  }
+
+                  await STOTracking.save()
+
                   res.status(200).json({
                         status: true,
+                        message: `STO ${sto} converted to DN ${data.DELIVERY.trim()}`,
                         data: {
                               dn: data.DELIVERY.trim(),
                               items: data.CREATED_ITEMS.map(item => ({

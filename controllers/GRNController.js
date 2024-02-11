@@ -24,7 +24,7 @@ const createGRN = async (req, res) => {
                                     plant: item.PLANT.trim(),
                                     storageLocation: item.STGE_LOC.trim(),
                                     movementType: item.MOVE_TYPE.trim(),
-                                    entryQuantity:item.ENTRY_QNT,
+                                    entryQuantity: item.ENTRY_QNT,
                                     entryUom: item.ENTRY_UOM.trim(),
                                     entryUomIso: item.ENTRY_UOM_ISO.trim(),
                                     po: item.PO_NUMBER.trim(),
