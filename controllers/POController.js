@@ -124,7 +124,7 @@ const poDisplay = async (req, res) => {
                                           changedOn: item.CHANGED_ON.trim(),
                                           material: item.MATERIAL.trim(),
                                           companyCode: item.CO_CODE.trim(),
-                                          storeLocation: item.STORE_LOC.trim(),
+                                          storageLocation: item.STORE_LOC.trim(),
                                           description: item.SHORT_TEXT.trim(),
                                           receivingPlant: item.PLANT.trim(),
                                           materialGroup: item.MAT_GRP.trim(),
