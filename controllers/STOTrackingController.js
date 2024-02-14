@@ -1,5 +1,5 @@
 const STOTrackingModel = require('../models/STOTrackingModel');
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 
 const postSTOTracking = async (req, res) => {
       try {
@@ -34,45 +34,100 @@ const postSTOTracking = async (req, res) => {
       }
 }
 
-// const updateSTOTracking = async (req, res) => {
-//       try {
-//             const { id } = req.params
+const updateSTOTracking = async (req, res) => {
+      try {
+            const {
+                  sto,
+                  picker,
+                  pickerId,
+                  packer,
+                  packerId,
+                  pickingStartingTime,
+                  pickingEndingTime,
+                  packingStartingTime,
+                  packingEndingTime
+            } = req.body
 
-//             if (!mongoose.Types.ObjectId.isValid(id)) {
-//                   return res.status(404).json({
-//                         status: false,
-//                         message: `STO id incorrect`
-//                   })
-//             }
+            console.log(req.body);
 
-//             let STOTracking = await STOTrackingModel.findById(id)
+            const filter = {
+                  sto
+            }
 
-//             if(STOTracking === null){
-//                   return res.status(404).json({
-//                         status: false,
-//                         message: `STO id incorrect`
-//                   })
-//             }
-//             else if(STOTracking.picker.length > 0) {
-//                   STOTracking.status = "in picking"
-//             }
+            const STOTracking = await STOTrackingModel.findOne(filter)
 
-//             await STOTracking.save()
+            const {
+                  hasPicker,
+                  hasPacker,
+                  hasPickingStartingTime,
+                  hasPickingEndingTime,
+                  hasPackingStartingTime,
+                  hasPackingEndingTime
+            } = STOTracking
 
-//             return res.status(201).send(
-//                   {
-//                         status: true,
-//                         message: "Updated STO Tracking",
-//                         stoInTracking: STOTracking
-//                   })
-//       }
-//       catch (err) {
-//             res.status(500).json({
-//                   status: false,
-//                   message: `${err}`
-//             })
-//       }
-// }
+
+            if (STOTracking === null) {
+                  return res.status(404).json({
+                        status: false,
+                        message: `STO id incorrect`
+                  })
+            }
+
+            else if (hasPicker && hasPickingStartingTime) {
+                  STOTracking.status = "inboundPicking"
+                  STOTracking.pickingStartingTime = pickingStartingTime
+                  console.log(79,STOTracking);
+            }
+            else if (!hasPicker) {
+                  if (!picker && !pickerId) {
+                        throw new Error('Picker & Picker Id is required')
+                  }
+                  STOTracking.picker = picker
+                  STOTracking.pickerId = pickerId
+                  STOTracking.status = "task assigned"
+                  console.log(88,STOTracking);
+            }
+            else if (hasPacker && hasPackingStartingTime) {
+                  STOTracking.status = "inboundPacking"
+                  STOTracking.packingStartingTime = packingStartingTime || new Date()
+                  console.log(93,STOTracking);
+            }
+            else if (!hasPacker) {
+                  if (!packer && !packerId) {
+                        throw new Error('Packer & Packer Id is required')
+                  }
+                  STOTracking.packer = packer
+                  STOTracking.packerId = packerId
+                  STOTracking.status = "task assigned"
+                  console.log(102,STOTracking);
+            }
+            else if (hasPicker && hasPickingStartingTime && hasPickingEndingTime) {
+                  STOTracking.pickingEndingTime = pickingEndingTime || new Date()
+                  STOTracking.status = "inboundPicked"
+                  console.log(107,STOTracking);
+            }
+            else if (hasPacker && hasPackingStartingTime && hasPackingEndingTime) {
+                  STOTracking.packingEndingTime = packingEndingTime || new Date()
+                  STOTracking.status = "inboundPacked"
+                  console.log(112,STOTracking);
+            }
+
+            await STOTracking.save()
+
+            return res.status(201).send(
+                  {
+                        status: true,
+                        message: "Updated STO Tracking",
+                        stoInTracking: STOTracking
+                  })
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            })
+      }
+}
 
 const getSTOTracking = async (req, res) => {
       try {
@@ -140,7 +195,7 @@ const search = async (req, res, status) => {
             status
       };
 
-      if(status === ''){
+      if (status === '') {
             filter = {};
       }
 
@@ -182,7 +237,7 @@ const search = async (req, res, status) => {
 
 module.exports = {
       postSTOTracking,
-      // updateSTOTracking,
+      updateSTOTracking,
       getSTOTracking,
       getStoPendingForDN,
       getStoInDN,

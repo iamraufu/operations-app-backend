@@ -39,7 +39,7 @@ app.use("/bapi/article", ArticleRoutes) // Article API
 app.use("/bapi/po", PORoutes) // PO API
 app.use("/bapi/sto", STORoutes) // STO API
 app.use("/bapi/dn", DNRoutes) // DN API
-app.use("/bapi/grn", GRNRoutes) // PO to GRN API
+app.use("/bapi/grn", GRNRoutes) // PO & STO to GRN API
 
 app.use('/api/product-shelving', ProductShelvingRoutes) // Product Shelving API
 app.use('/api/sto-tracking', STOTrackingRoutes) // STO Tracking API

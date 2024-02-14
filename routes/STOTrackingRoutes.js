@@ -5,6 +5,7 @@ const { tokenVerify } = require('../utilities/tokenVerify')
 
 const {
       postSTOTracking,
+      updateSTOTracking,
       getSTOTracking,
       getStoPendingForDN,
       getStoInDN,
@@ -13,6 +14,7 @@ const {
 } = require('../controllers/STOTrackingController')
 
 router.post('/', tokenVerify, postSTOTracking)
+router.patch('/update', tokenVerify, updateSTOTracking)
 router.get('/', tokenVerify, getSTOTracking)
 router.get('/pending-for-dn', tokenVerify, getStoPendingForDN)
 router.get('/in-dn', tokenVerify, getStoInDN)

@@ -44,15 +44,24 @@ const stoTrackingSchema = new mongoose.Schema({
       },
       status: {
             type: String,
-            default: 'pending for dn'
+            default: 'pending for dn',
+            enum:['pending for dn', 'in dn', 'pending for grn', 'in grn', 'task assigned', 'inboundPicking', 'inboundPacking', 'inboundPicked', 'inboundPacked']
       },
       picker: {
             type: String,
             default: '',
       },
+      pickerId: {
+            type: String,
+            default: ''
+      },
       packer: {
             type: String,
-            default: '',
+            default: ''
+      },
+      packerId: {
+            type: String,
+            default: ''
       },
       pickingStartingTime: {
             type: Date,
