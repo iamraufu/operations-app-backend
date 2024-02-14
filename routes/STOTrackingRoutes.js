@@ -9,6 +9,11 @@ const {
       getSTOTracking,
       getStoPendingForDN,
       getStoInDN,
+      getStoAssigned,
+      getStoInboundPicking,
+      getStoInboundPacking,
+      getStoInboundPicked,
+      getStoInboundPacked,
       getStoInGRN,
       getStoInTransit
 } = require('../controllers/STOTrackingController')
@@ -18,6 +23,11 @@ router.patch('/update', tokenVerify, updateSTOTracking)
 router.get('/', tokenVerify, getSTOTracking)
 router.get('/pending-for-dn', tokenVerify, getStoPendingForDN)
 router.get('/in-dn', tokenVerify, getStoInDN)
+router.get('/assigned', tokenVerify, getStoAssigned)
+router.get('/inbound-picking', tokenVerify, getStoInboundPicking)
+router.get('/inbound-packing', tokenVerify, getStoInboundPacking)
+router.get('/inbound-picked', tokenVerify, getStoInboundPicked)
+router.get('/inbound-packed', tokenVerify, getStoInboundPacked)
 router.get('/in-transit', tokenVerify, getStoInTransit)
 router.get('/in-grn', tokenVerify, getStoInGRN)
 

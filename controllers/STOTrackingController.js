@@ -165,6 +165,66 @@ const getStoInDN = async (req, res) => {
       }
 }
 
+const getStoAssigned = async (req, res) => {
+      try {
+            await search(req, res, 'task assigned')
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            });
+      }
+}
+
+const getStoInboundPicking = async (req, res) => {
+      try {
+            await search(req, res, 'inboundPicking')
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            });
+      }
+}
+
+const getStoInboundPicked = async (req, res) => {
+      try {
+            await search(req, res, 'inboundPicked')
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            });
+      }
+}
+
+const getStoInboundPacking = async (req, res) => {
+      try {
+            await search(req, res, 'inboundPacking')
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            });
+      }
+}
+
+const getStoInboundPacked = async (req, res) => {
+      try {
+            await search(req, res, 'inboundPacked')
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            });
+      }
+}
+
 const getStoInGRN = async (req, res) => {
       try {
             await search(req, res, 'in grn')
@@ -241,6 +301,11 @@ module.exports = {
       getSTOTracking,
       getStoPendingForDN,
       getStoInDN,
+      getStoAssigned,
+      getStoInboundPicking,
+      getStoInboundPacking,
+      getStoInboundPicked,
+      getStoInboundPacked,
       getStoInGRN,
       getStoInTransit
 }
