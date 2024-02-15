@@ -57,14 +57,20 @@ const updateSTOTracking = async (req, res) => {
             const STOTracking = await STOTrackingModel.findOne(filter)
 
             const {
-                  hasPicker,
+                  picker: hasPicker,
+                  packer: hasPacker,
+                  pickingStartingTime: hasPickingStartingTime,
+                  pickingEndingTime: hasPickingEndingTime,
+                  packingStartingTime: hasPackingStartingTime,
+                  packingEndingTime: hasPackingEndingTime
+            } = STOTracking
+            
+            console.log(hasPicker,
                   hasPacker,
                   hasPickingStartingTime,
                   hasPickingEndingTime,
                   hasPackingStartingTime,
-                  hasPackingEndingTime
-            } = STOTracking
-
+                  hasPackingEndingTime);
 
             if (STOTracking === null) {
                   return res.status(404).json({
@@ -76,7 +82,6 @@ const updateSTOTracking = async (req, res) => {
             else if (hasPicker && hasPickingStartingTime) {
                   STOTracking.status = "inboundPicking"
                   STOTracking.pickingStartingTime = pickingStartingTime
-                  console.log(79,STOTracking);
             }
             else if (!hasPicker) {
                   if (!picker && !pickerId) {
@@ -85,12 +90,10 @@ const updateSTOTracking = async (req, res) => {
                   STOTracking.picker = picker
                   STOTracking.pickerId = pickerId
                   STOTracking.status = "task assigned"
-                  console.log(88,STOTracking);
             }
             else if (hasPacker && hasPackingStartingTime) {
                   STOTracking.status = "inboundPacking"
                   STOTracking.packingStartingTime = packingStartingTime || new Date()
-                  console.log(93,STOTracking);
             }
             else if (!hasPacker) {
                   if (!packer && !packerId) {
