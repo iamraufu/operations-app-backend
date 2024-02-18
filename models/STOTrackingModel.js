@@ -3,19 +3,23 @@ const mongoose = require('mongoose');
 const stoTrackingSchema = new mongoose.Schema({
       sto: {
             type: String,
-            required: true
+            required: true,
+            immutable: true
       },
       dn: {
             type: String,
-            default: ''
+            default: '',
+            immutable: true
       },
       grn: {
             type: String,
-            default: ''
+            default: '',
+            immutable: true
       },
       createdOnSAP: {
             type: String,
-            required: true
+            required: true,
+            immutable: true
       },
       createdAt: {
             type: Date,
@@ -45,23 +49,23 @@ const stoTrackingSchema = new mongoose.Schema({
       status: {
             type: String,
             default: 'pending for dn',
-            enum:['pending for dn', 'in dn', 'pending for grn', 'in grn', 'task assigned', 'inboundPicking', 'inboundPacking', 'inboundPicked', 'inboundPacked']
+            enum:['pending for dn', 'in dn', 'pending for grn', 'in grn', 'picker assigned', 'packer assigned', 'picker packer assigned', 'inbound picking', 'inbound packing', 'inbound picked', 'inbound packed']
       },
       picker: {
             type: String,
-            default: '',
+            default: null
       },
       pickerId: {
             type: String,
-            default: ''
+            default: null
       },
       packer: {
             type: String,
-            default: ''
+            default: null
       },
       packerId: {
             type: String,
-            default: ''
+            default: null
       },
       pickingStartingTime: {
             type: Date,

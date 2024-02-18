@@ -27,7 +27,8 @@ const articleTrackingSchema = new mongoose.Schema({
       },
       status: {
             type: String,
-            default: "in document"
+            default: "in document",
+            enum: ["in document", "inbound picking", "inbound picked", "inbound packing", "inbound packed", "outbound delivering", "outbound delivered", "in transit"]
       },
       quantity: {
             type: Number,
@@ -43,11 +44,19 @@ const articleTrackingSchema = new mongoose.Schema({
       },
       inboundPicker: {
             type: String,
-            default: ""
+            default: '',
+      },
+      inboundPickerId: {
+            type: String,
+            default: ''
       },
       inboundPacker: {
             type: String,
-            default: ""
+            default: ''
+      },
+      inboundPackerId: {
+            type: String,
+            default: ''
       },
       inboundPickingStartingTime: {
             type: Date,

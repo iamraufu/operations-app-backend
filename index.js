@@ -13,6 +13,7 @@ const GRNRoutes = require('./routes/GRNRoutes')
 const DNRoutes = require('./routes/DNRoutes')
 const STOTrackingRoutes = require('./routes/STOTrackingRoutes')
 const POTrackingRoutes = require('./routes/POTrackingRoutes')
+const ArticleTrackingRoutes = require('./routes/ArticleTrackingRoutes')
 
 require('dotenv').config()
 
@@ -44,6 +45,7 @@ app.use("/bapi/grn", GRNRoutes) // PO & STO to GRN API
 app.use('/api/product-shelving', ProductShelvingRoutes) // Product Shelving API
 app.use('/api/sto-tracking', STOTrackingRoutes) // STO Tracking API
 app.use('/api/po-tracking', POTrackingRoutes) // PO Tracking API
+app.use('/api/article-tracking', ArticleTrackingRoutes) // Article Tracking API
 
 connectDB()
 

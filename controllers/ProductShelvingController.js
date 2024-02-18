@@ -144,6 +144,11 @@ const search = async (req, res, status) => {
       let filter = {
             status
       };
+      
+      if (status === '') {
+            filter = {};
+      }
+
       if (req.query.filterBy && req.query.value) {
             filter[req.query.filterBy] = req.query.value;
       }
