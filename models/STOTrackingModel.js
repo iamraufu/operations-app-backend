@@ -46,6 +46,10 @@ const stoTrackingSchema = new mongoose.Schema({
             type: Number,
             required: true
       },
+      pickedSku: {
+            type: Number,
+            default: null
+      },
       status: {
             type: String,
             default: 'pending for dn',

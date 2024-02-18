@@ -34,6 +34,10 @@ const articleTrackingSchema = new mongoose.Schema({
             type: Number,
             required: true
       },
+      pickedQuantity: {
+            type:Number,
+            default : null
+      },
       inboundPickedQuantity: {
             type: Number,
             default: null

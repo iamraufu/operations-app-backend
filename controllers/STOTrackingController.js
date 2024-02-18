@@ -45,6 +45,7 @@ const updateSTOTracking = async (req, res) => {
                   pickingEndingTime,
                   packingStartingTime,
                   packingEndingTime,
+                  pickedSku,
                   status
             } = req.body
 
@@ -136,6 +137,7 @@ const updateSTOTracking = async (req, res) => {
                   STOTracking.pickingEndingTime = pickingEndingTime ? pickingEndingTime : STOTracking.pickingEndingTime || null
                   STOTracking.packingStartingTime = packingStartingTime ? packingStartingTime : STOTracking.packingStartingTime || null
                   STOTracking.packingEndingTime = packingEndingTime ? packingEndingTime : STOTracking.packingEndingTime || null
+                  STOTracking.pickedSku = pickedSku ? pickedSku : STOTracking.pickedSku || null
                   STOTracking.status = status ? status : STOTracking.status || null
                   STOTracking.updatedAt = new Date()
             }

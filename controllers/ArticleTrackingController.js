@@ -48,6 +48,7 @@ const updateArticleTracking = async (req, res) => {
                   pickingEndingTime,
                   packingStartingTime,
                   packingEndingTime,
+                  pickedQuantity,
                   status
             } = req.body
 
@@ -127,6 +128,7 @@ const updateArticleTracking = async (req, res) => {
                   ArticleTracking.inboundPickingEndingTime = pickingEndingTime ? pickingEndingTime : ArticleTracking.inboundPickingEndingTime || null
                   ArticleTracking.inboundPackingStartingTime = packingStartingTime ? packingStartingTime : ArticleTracking.inboundPackingStartingTime || null
                   ArticleTracking.inboundPackingEndingTime = packingEndingTime ? packingEndingTime : ArticleTracking.inboundPackingEndingTime || null
+                  ArticleTracking.pickedQuantity = pickedQuantity ? pickedQuantity : ArticleTracking.pickedQuantity || null
                   ArticleTracking.status = status ? status : ArticleTracking.status || null
                   ArticleTracking.updatedAt = new Date()
             }
