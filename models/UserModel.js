@@ -14,11 +14,16 @@ const userSchema = new mongoose.Schema({
       },
       password: {
             type: String,
-            min: 8,
+            required: true
+      },
+      site: {
+            type: Array,
+            of: String,
+            default: [],
             required: true
       },
       role: {
-            type: String,  // admin or user
+            type: String,  // admin or user etc.
             default: "user",
       },
       hasPermission: {

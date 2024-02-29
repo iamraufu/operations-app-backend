@@ -4,6 +4,7 @@ var cors = require('cors');
 const { connectDB } = require('./database/connection');
 
 const UserRoutes = require('./routes/UserRoutes')
+const RoleRoutes = require('./routes/RoleRoutes')
 const OutletRoutes = require('./routes/OutletRoutes')
 const ArticleRoutes = require('./routes/ArticleRoutes')
 const ProductShelvingRoutes = require('./routes/ProductShelvingRoutes')
@@ -34,6 +35,7 @@ app.get('/health', (req, res) => {
 })
 
 app.use("/api/user", UserRoutes) // User API
+app.use("/api/role", RoleRoutes) // Role API
 
 app.use("/bapi/outlet", OutletRoutes) // Outlet API
 app.use("/bapi/article", ArticleRoutes) // Article API
