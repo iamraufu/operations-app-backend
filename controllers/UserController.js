@@ -52,7 +52,8 @@ const login = async (req, res) => {
       try {
             const { email, password } = req.body
             const user = await UserModel.findOne({ email })
-            const userExist = Boolean(await UserModel.findOne({ email }))
+            const userWithoutPassword = await UserModel.findOne({ email }).select(" -password")
+            const userExist = Boolean(user)
 
             if (!userExist) {
                   return res.status(401).json({
@@ -83,8 +84,6 @@ const login = async (req, res) => {
 
                   user.hasPermission = role?.hasPermission ? role?.hasPermission : []
 
-                  await user.save()
-
                   const token = jwt.sign(
                         {
                               email: user.email,
@@ -95,11 +94,6 @@ const login = async (req, res) => {
                         {
                               expiresIn: '365d'
                         });
-
-                  const {
-                        password: pass,
-                        ...userWithoutPassword
-                  } = user;
 
                   res.status(200).json({
                         status: true,
@@ -175,7 +169,7 @@ const user = async (req, res) => {
                   })
             }
 
-            const foundUser = await UserModel.findById(id).select("-password").lean()
+            const foundUser = await UserModel.findById(id).select(" -password").lean()
 
             if (!foundUser) {
                   return res.status(404).json({
@@ -186,21 +180,21 @@ const user = async (req, res) => {
 
             const role = await RoleModel.findOne({ role: foundUser.role });
 
-            if (!role) {
+            if (!role && foundUser.role !== 'user') {
                   return res.status(500).json({
                         status: false,
                         message: "User role not found",
                   });
             }
 
-            foundUser.hasPermission = role?.hasPermission ? role?.hasPermission : []
+            if (role || foundUser.role === 'user') {
+                  foundUser.hasPermission = role?.hasPermission ? role?.hasPermission : []
 
-            await foundUser.save()
-
-            res.status(200).json({
-                  status: true,
-                  user: foundUser
-            })
+                  res.status(200).json({
+                        status: true,
+                        user: foundUser
+                  })
+            }
       }
       catch (err) {
             res.status(500).json({
@@ -216,10 +210,10 @@ const getAllPickerPacker = async (req, res) => {
             const allUsers = await UserModel.find(
                   {
                         isDeleted: false,
-                        site: req.body.site,
+                        site: req.params.site,
                         role: { $in: ["picker", "packer"] }
                   })
-                  .select("-password")
+                  .select(" -password")
                   .lean();
 
             for (let i = 0; i < allUsers.length; i++) {
@@ -234,8 +228,6 @@ const getAllPickerPacker = async (req, res) => {
                               hasPermission: role.hasPermission,
                         };
                   }
-
-                  user.save()
             }
 
             res.status(200).json({
@@ -251,9 +243,12 @@ const getAllPickerPacker = async (req, res) => {
       }
 };
 
-const changePassword = async (req, res) => {
+// Update user by Id
+const update = async (req, res) => {
+
       const { id } = req.params
       const { password, newPassword } = req.body
+      let userDetails = {}
 
       try {
             if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -263,8 +258,8 @@ const changePassword = async (req, res) => {
                   })
             }
 
-            const user = await UserModel.findById(id).select("_id email password")
-            const userExist = Boolean(user);
+            const user = await UserModel.findById(id)
+            const userExist = Boolean(user)
 
             if (!userExist) {
                   return res.status(401).json({
@@ -273,73 +268,60 @@ const changePassword = async (req, res) => {
                   });
             }
 
-            const isPasswordValid = await bcrypt.compare(password, user.password);
-
-            if (!isPasswordValid) {
+            if(!password && newPassword){
                   return res.status(401).json({
                         status: false,
-                        message: "Invalid email or password",
+                        message: "Please enter old password"
                   });
             }
 
-            const hashedPassword = await bcrypt.hash(newPassword, 10);
+            if (password && !newPassword) {
+                  return res.status(401).json({
+                        status: false,
+                        message: `Please enter new password`
+                  });
 
-            await UserModel.findOneAndUpdate(
-                  { _id: id },
-                  { password: hashedPassword },
-                  {
-                        new: true,
-                        projection: "_id email"
+            }
+
+            if (password && newPassword) {
+                  const isPasswordValid = await bcrypt.compare(password, user.password)
+
+                  if (!isPasswordValid) {
+                        return res.status(401).json({
+                              status: false,
+                              message: "Incorrect old password"
+                        });
                   }
-            );
+
+                  const salt = await bcrypt.genSalt(10);
+                  const passwordHash = await bcrypt.hash(newPassword, salt);
+
+                  userDetails = {
+                        ...req.body,
+                        password: passwordHash,
+                        updatedAt: new Date()
+                  }
+            }
+
+            else {
+                  userDetails = {
+                        ...req.body,
+                        updatedAt: new Date()
+                  }
+            }
+
+            let updatedUser = await UserModel.findByIdAndUpdate
+                  (
+                        id, userDetails,
+                        {
+                              new: true,
+                              runValidators: true
+                        }
+                  ).select(" -password")
 
             res.status(201).json({
                   status: true,
-                  message: "User password updated successfully!"
-            });
-      } catch (error) {
-            res.status(500).json({
-                  status: false,
-                  message: `${err}`,
-            });
-      }
-};
-
-// Update user by Id
-const update = async (req, res) => {
-
-      const { id } = req.params
-      let userDetails = {}
-
-      if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(404).json({
-                  status: false,
-                  message: `User Id incorrect`
-            })
-      }
-
-      if (req.body.password) {
-            const salt = await bcrypt.genSalt(10);
-            const passwordHash = await bcrypt.hash(req.body.password, salt);
-
-            userDetails = {
-                  ...req.body,
-                  password: passwordHash,
-                  updatedAt: new Date()
-            }
-      }
-      else {
-            userDetails = {
-                  ...req.body,
-                  updatedAt: new Date()
-            }
-      }
-
-      try {
-            let updatedUser = await UserModel.findByIdAndUpdate(id, userDetails, { new: true, runValidators: true })
-
-            res.status(201).json({
-                  status: true,
+                  message: "User updated successfully",
                   user: updatedUser
             })
       }
@@ -377,9 +359,8 @@ const search = async (req, res, status) => {
             .skip((pageSize * (currentPage - 1)))
             .limit(pageSize)
             .sort({ [sortBy]: sortOrder })
-            .select("-password")
+            .select(" -password")
             .lean()
-            .exec()
 
       for (let i = 0; i < items.length; i++) {
             const user = items[i];
@@ -392,15 +373,13 @@ const search = async (req, res, status) => {
                         hasPermission: role.hasPermission,
                   };
             }
-
-            // user.save();
       }
 
       const responseObject = {
             status: true,
-            items,
             totalPages: Math.ceil(totalItems / pageSize),
-            totalItems
+            totalItems,
+            items
       };
 
       if (items.length) {
@@ -423,6 +402,5 @@ module.exports = {
       // userPreferences,
       user,
       getAllPickerPacker,
-      changePassword,
       update
 }
