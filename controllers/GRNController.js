@@ -4,32 +4,25 @@ const STOTrackingModel = require('../models/STOTrackingModel');
 const POGRN = async (req, res) => {
       try {
             const po = req.body[0].po
+            const bodyDetails = {
+                  "GRNDocument": po,
+                  "GRNData": req.body.map(item => ({
+                        movementType: item.movementType,
+                        movementIndicator: item.movementIndicator,
+                        po: item.po,
+                        poItem: item.poItem,
+                        material: item.material,
+                        plant: item.plant,
+                        storageLocation: item.storageLocation,
+                        quantity: item.quantity,
+                        uom: item.uom,
+                        uomIso: item.uomIso
+                  }))
+            }
 
             const requestOptions = {
                   method: 'POST',
-                  body: JSON.stringify(
-                        {
-                              GRNHeader: [{
-                                    "REF_DOC_NO": po
-                              }],
-                              GRNData: req.body.map(item => ({
-                                    MOVE_TYPE: item.movementType,
-                                    MVT_IND: item.movementIndicator,
-                                    PO_NUMBER: item.po,
-                                    PO_ITEM: item.poItem,
-                                    MATERIAL: item.material,
-                                    PLANT: item.site,
-                                    STGE_LOC: item.storageLocation,
-                                    ENTRY_QNT: item.quantity,
-                                    ENTRY_UOM: item.UOM,
-                                    ENTRY_UOM_ISO: item.UOMISO
-                              })),
-                              AuthData: [{
-                                    UserID: "rupom",
-                                    Password: "bd1975"
-                              }]
-                        }
-                  )
+                  body: JSON.stringify(bodyDetails)
             }
 
             const response = await fetch('http://202.74.246.133:81/sap/qs/create_grn.php', requestOptions)
@@ -112,31 +105,25 @@ const STOGRN = async (req, res) => {
       try {
             const sto = req.body[0].sto
 
+            const bodyDetails = {
+                  "GRNDocument": sto,
+                  "GRNData": req.body.map(item => ({
+                        movementType: item.movementType,
+                        movementIndicator: item.movementIndicator,
+                        po: item.sto,
+                        poItem: item.stoItem,
+                        material: item.material,
+                        plant: item.plant,
+                        storageLocation: item.storageLocation,
+                        quantity: item.quantity,
+                        uom: item.uom,
+                        uomIso: item.uomIso
+                  }))
+            }
+
             const requestOptions = {
                   method: 'POST',
-                  body: JSON.stringify(
-                        {
-                              GRNHeader: [{
-                                    "REF_DOC_NO": sto
-                              }],
-                              GRNData: req.body.map(item => ({
-                                    MOVE_TYPE: item.movementType,
-                                    MVT_IND: item.movementIndicator,
-                                    PO_NUMBER: item.sto,
-                                    PO_ITEM: item.stoItem,
-                                    MATERIAL: item.material,
-                                    PLANT: item.site,
-                                    STGE_LOC: item.storageLocation,
-                                    ENTRY_QNT: item.quantity,
-                                    ENTRY_UOM: item.UOM,
-                                    ENTRY_UOM_ISO: item.UOMISO
-                              })),
-                              AuthData: [{
-                                    UserID: "rupom",
-                                    Password: "bd1975"
-                              }]
-                        }
-                  )
+                  body: JSON.stringify(bodyDetails)
             }
             const response = await fetch('http://202.74.246.133:81/sap/qs/create_grn.php', requestOptions)
             const data = await response.json()
