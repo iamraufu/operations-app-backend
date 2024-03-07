@@ -32,7 +32,7 @@ const POGRN = async (req, res) => {
                   )
             }
 
-            const response = await fetch('http://202.74.246.133:81/sap/outlet_automation/create_grn.php', requestOptions)
+            const response = await fetch('http://202.74.246.133:81/sap/qs/create_grn.php', requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E') {
@@ -138,7 +138,7 @@ const STOGRN = async (req, res) => {
                         }
                   )
             }
-            const response = await fetch('http://202.74.246.133:81/sap/outlet_automation/create_grn.php', requestOptions)
+            const response = await fetch('http://202.74.246.133:81/sap/qs/create_grn.php', requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E') {

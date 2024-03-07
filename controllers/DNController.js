@@ -19,7 +19,7 @@ const createDN = async (req, res) => {
                         }
                   )
             }
-            const response = await fetch('http://202.74.246.133:81/sap/outlet_automation/delivery_note.php', requestOptions)
+            const response = await fetch('http://202.74.246.133:81/sap/qs/delivery_note.php', requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E' && data?.RETURN.find(result => result.NUMBER === '001') && data?.RETURN.find(result => result.NUMBER === '051')) {

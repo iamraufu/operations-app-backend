@@ -5,10 +5,12 @@ const router = express.Router()
 
 const {
       products,
+      productByMC,
       singleProduct
 } = require('../controllers/ArticleController')
 
 router.get('/', products)
+router.post('/', productByMC)
 router.get('/:material', singleProduct)
 
 module.exports = router
