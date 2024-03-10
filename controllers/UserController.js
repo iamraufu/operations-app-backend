@@ -82,13 +82,13 @@ const login = async (req, res) => {
 
             if (role || user.role === 'user') {
 
-                  user.hasPermission = role?.hasPermission ? role?.hasPermission : []
+                  userWithoutPassword.hasPermission = role?.hasPermission ? role?.hasPermission : []
 
                   const token = jwt.sign(
                         {
-                              email: user.email,
-                              name: user.name,
-                              role: user.role
+                              email: userWithoutPassword.email,
+                              name: userWithoutPassword.name,
+                              role: userWithoutPassword.role
                         },
                         process.env.JWT,
                         {
