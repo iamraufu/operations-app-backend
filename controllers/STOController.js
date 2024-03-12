@@ -85,10 +85,10 @@ const stoDisplay = async (req, res) => {
       try {
             const requestOptions = {
                   method: 'POST',
-                  body: JSON.stringify({ po: req.body.sto })
+                  body: JSON.stringify({ sto: req.body.sto })
             }
 
-            const response = await fetch('http://202.74.246.133:81/sap/qs/po_display.php', requestOptions)
+            const response = await fetch('http://202.74.246.133:81/sap/qs/sto_display.php', requestOptions)
             const data = await response.json()
 
             if (data === 'Could not open connection') {
