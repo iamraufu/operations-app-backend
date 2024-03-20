@@ -90,10 +90,12 @@ const updateProductInShelf = async (req, res) => {
             else if (quantity < receivedQuantity) {
                   readyForShelvingProduct.inShelf.push(req.body)
                   readyForShelvingProduct.status = 'partially in shelf'
+                  readyForShelvingProduct.inShelf.updatedAt = new Date()
             }
             else {
                   readyForShelvingProduct.inShelf.push(req.body)
                   readyForShelvingProduct.status = 'in shelf'
+                  readyForShelvingProduct.inShelf.updatedAt = new Date()
             }
 
             await readyForShelvingProduct.save()
