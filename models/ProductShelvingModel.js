@@ -9,6 +9,10 @@ const productShelvingSchema = new mongoose.Schema({
             type: String,
             required: true
       },
+      barcode: {
+            type: String,
+            required:true,
+      },
       description: {
             type: String,
             required: true
