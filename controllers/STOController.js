@@ -18,11 +18,11 @@ const stoList = async (req, res) => {
 
             const response = await fetch('http://202.74.246.133:81/sap/qs/get_po.php', requestOptions)
             const data = await response.json()
-            
+
             if (data.PO_FOUND > 0) {
 
                   const sto = await data.PO_DOCUMENT.map(item => item.EBELN_LOW.trim())
-                  
+
 
                   const items = await data.POLINES.map(item => ({
                         sto: item.EBELN.trim(),
@@ -72,6 +72,79 @@ const stoList = async (req, res) => {
                         message: data
                   })
             }
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            })
+      }
+}
+
+const multipleStoList = async (req, res) => {
+      try {
+            const { from, to, site } = req.query
+            const sites = site.split(',')
+
+            const requests = sites.map(site => {
+
+                  const requestOptions = {
+                        method: 'POST',
+                        body: JSON.stringify(
+                              {
+                                    sign: "I",
+                                    site,
+                                    from,
+                                    to
+                              }
+                        )
+                  }
+
+                  return fetch('http://202.74.246.133:81/sap/qs/get_po.php', requestOptions)
+            })
+
+            const responses = await Promise.all(requests)
+            const results = responses.map(response => response.json())
+            const data = await Promise.all(results)
+
+            const count = data.reduce((accumulator, currentValue) => accumulator + currentValue.PO_FOUND, 0);
+            const sto = data.map(item => item.PO_DOCUMENT.map(sto => sto.EBELN_LOW.trim())).flat();
+
+            const items = data.map(item => item.POLINES.map(innerItem =>
+            ({
+                  sto: innerItem.EBELN.trim(),
+                  createdOnSAP: innerItem.AEDAT.trim(),
+                  supplyingPlant: item.IN_SITE[0].WERKS_LOW.trim(),
+                  sku: item.POLINES.filter(s => s.EBELN === innerItem.EBELN).length
+            })
+            )).flat()
+
+            let list = []
+
+            items.filter(item => sto.map(async sto => {
+                  if (sto === item.sto && !doesObjectExistWithId(list, item.sto)) {
+                        list.push(item)
+                        const isAlreadySTOInTracking = await STOTrackingModel.findOne().where('sto').equals(item.sto).exec();
+
+                        if (!isAlreadySTOInTracking) {
+                              await STOTrackingModel.create(item)
+                        }
+                  }
+            }))
+
+            function doesObjectExistWithId(array, sto) {
+                  return array.some(obj => obj.sto === sto);
+            }
+
+            await res.status(200).json({
+                  status: true,
+                  message: "Successfully tracked STO and retrieved Lists",
+                  data: {
+                        count,
+                        sto: list
+                  }
+            })
+
       }
       catch (err) {
             res.status(500).json({
@@ -163,5 +236,6 @@ const stoDisplay = async (req, res) => {
 
 module.exports = {
       stoList,
+      multipleStoList,
       stoDisplay
 }
