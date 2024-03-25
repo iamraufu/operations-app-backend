@@ -16,7 +16,7 @@ const assignToReadyForShelving = async (req, res) => {
             if (isAlreadyReadyForShelving) {
                   return res.status(409).send({
                         status: false,
-                        message: `Material ${code} with quantity of ${quantity} of PO ${po} has already been assigned.`
+                        message: `Material ${code} with quantity of ${receivedQuantity} of PO ${po} has already been assigned.`
                   })
             }
             else if(receivedQuantity > quantity){
