@@ -34,45 +34,49 @@ const postPOTracking = async (req, res) => {
       }
 }
 
-// const updatePOTracking = async (req, res) => {
-//       try {
-//             const { id } = req.params
+const updatePOTracking = async (req, res) => {
+      try {
+            const { id } = req.params
 
-//             if (!mongoose.Types.ObjectId.isValid(id)) {
-//                   return res.status(404).json({
-//                         status: false,
-//                         message: `PO id incorrect`
-//                   })
-//             }
+            if (!mongoose.Types.ObjectId.isValid(id)) {
+                  return res.status(404).json({
+                        status: false,
+                        message: `PO id incorrect`
+                  })
+            }
 
-//             let POTracking = await POTrackingModel.findById(id)
+            let POTracking = await POTrackingModel.findById(id)
 
-//             if(POTracking === null){
-//                   return res.status(404).json({
-//                         status: false,
-//                         message: `PO id incorrect`
-//                   })
-//             }
-//             else if(POTracking.picker.length > 0) {
-//                   POTracking.status = "in picking"
-//             }
+            if (POTracking === null) {
+                  return res.status(404).json({
+                        status: false,
+                        message: `PO id incorrect`
+                  })
+            }
+            // else if(POTracking.picker.length > 0) {
+            //       POTracking.status = "in picking"
+            // }
 
-//             await POTracking.save()
+            const { status } = req.body
 
-//             return res.status(201).send(
-//                   {
-//                         status: true,
-//                         message: "Updated PO Tracking",
-//                         poInTracking: POTracking
-//                   })
-//       }
-//       catch (err) {
-//             res.status(500).json({
-//                   status: false,
-//                   message: `${err}`
-//             })
-//       }
-// }
+            POTracking.status = status
+
+            await POTracking.save()
+
+            return res.status(201).send(
+                  {
+                        status: true,
+                        message: "Updated PO Tracking",
+                        poInTracking: POTracking
+                  })
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            })
+      }
+}
 
 const getPOTracking = async (req, res) => {
       try {
@@ -116,7 +120,7 @@ const search = async (req, res, status) => {
             status
       };
 
-      if(status === ''){
+      if (status === '') {
             filter = {};
       }
 
@@ -158,7 +162,7 @@ const search = async (req, res, status) => {
 
 module.exports = {
       postPOTracking,
-      // updatePOTracking,
+      updatePOTracking,
       getPOTracking,
       getPoPendingForGRN,
       getPoInGRN

@@ -5,13 +5,14 @@ const { tokenVerify } = require('../utilities/tokenVerify')
 
 const {
       postPOTracking,
-      // updatePOTracking,
+      updatePOTracking,
       getPOTracking,
       getPoPendingForGRN,
       getPoInGRN
 } = require('../controllers/POTrackingController')
 
 router.post('/', tokenVerify, postPOTracking)
+router.patch('/:id', tokenVerify, updatePOTracking)
 router.get('/', tokenVerify, getPOTracking)
 router.get('/pending-for-grn', tokenVerify, getPoPendingForGRN)
 router.get('/in-grn', tokenVerify, getPoInGRN)

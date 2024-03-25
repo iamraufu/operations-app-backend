@@ -3,15 +3,18 @@ const mongoose = require('mongoose');
 const poTrackingSchema = new mongoose.Schema({
       po: {
             type: String,
-            required: true
+            required: true,
+            immutable: true
       }, 
       grn: {
             type: String,
-            default: ''
+            default: '',
+            immutable: true
       },
       createdOnSAP: {
             type: String,
-            required: true
+            required: true,
+            immutable: true
       },
       createdAt: {
             type: Date,
@@ -31,11 +34,13 @@ const poTrackingSchema = new mongoose.Schema({
       },
       receivingPlant: {
             type: String,
-            required: true
+            required: true,
+            immutable: true
       },
       sku: {
             type: Number,
-            required: true
+            required: true,
+            immutable: true
       },
       status: {
             type: String,
