@@ -15,6 +15,7 @@ const DNRoutes = require('./routes/DNRoutes')
 const STOTrackingRoutes = require('./routes/STOTrackingRoutes')
 const POTrackingRoutes = require('./routes/POTrackingRoutes')
 const ArticleTrackingRoutes = require('./routes/ArticleTrackingRoutes')
+const ChildPackingRoutes = require('./routes/ChildPackingRoutes')
 
 require('dotenv').config()
 
@@ -48,6 +49,7 @@ app.use('/api/product-shelving', ProductShelvingRoutes) // Product Shelving API
 app.use('/api/sto-tracking', STOTrackingRoutes) // STO Tracking API
 app.use('/api/po-tracking', POTrackingRoutes) // PO Tracking API
 app.use('/api/article-tracking', ArticleTrackingRoutes) // Article Tracking API
+app.use('/api/child-packing', ChildPackingRoutes) // Child Packing API
 
 connectDB()
 
