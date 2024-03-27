@@ -12,7 +12,7 @@ const {
 } = require('../controllers/POTrackingController')
 
 router.post('/', tokenVerify, postPOTracking)
-router.patch('/:id', tokenVerify, updatePOTracking)
+router.patch('/', tokenVerify, updatePOTracking)
 router.get('/', tokenVerify, getPOTracking)
 router.get('/pending-for-grn', tokenVerify, getPoPendingForGRN)
 router.get('/in-grn', tokenVerify, getPoInGRN)
