@@ -5,7 +5,7 @@ const outlets = async (req, res) => {
       const fetchData = async () => {
 
             try {
-                  const response = await fetch('http://202.74.246.133:81/sap/qs/get_outlets.php')
+                  const response = await fetch('http://202.74.246.133:81/sap/dev/get_outlets.php')
                   const data = await response.json()
 
                   const outlets = await data.IT_SITE.length > 0 ? await data.IT_SITE.map(outlet => (
