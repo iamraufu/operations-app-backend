@@ -4,7 +4,7 @@ const products = async (req, res) => {
       const fetchData = async () => {
 
             try {
-                  const response = await fetch('http://202.74.246.133:81/sap/dev/get_materials.php')
+                  const response = await fetch('http://202.74.246.133:81/sap/qs/get_materials.php')
                   const data = await response.json()
 
                   const products = data.MATNRLIST.length > 0 ? data?.MATNRLIST.map(product => (
@@ -40,7 +40,7 @@ const singleProduct = async (req, res) => {
                               material: req.params.material
                         })
                   }
-                  const response = await fetch('http://202.74.246.133:81/sap/dev/get_material_description.php', requestOptions)
+                  const response = await fetch('http://202.74.246.133:81/sap/qs/get_material_description.php', requestOptions)
                   const data = await response.json()
 
                   if (data?.RETURN?.TYPE === 'E') {
@@ -86,7 +86,7 @@ const productByMC = async (req, res) => {
                         })
                   }
 
-                  const response = await fetch('http://202.74.246.133:81/sap/dev/get_materials_by_cat.php', requestOptions)
+                  const response = await fetch('http://202.74.246.133:81/sap/qs/get_materials_by_cat.php', requestOptions)
                   const data = await response.json()
 
                   if (data?.RETURN?.TYPE === 'E') {

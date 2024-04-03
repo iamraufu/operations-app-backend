@@ -16,7 +16,7 @@ const poList = async (req, res) => {
                   })
             }
 
-            const response = await fetch('http://202.74.246.133:81/sap/dev/get_po.php', requestOptions)
+            const response = await fetch('http://202.74.246.133:81/sap/qs/get_po.php', requestOptions)
             const data = await response.json()
 
             if (data.PO_FOUND > 0) {
@@ -88,7 +88,7 @@ const poDisplay = async (req, res) => {
                   body: JSON.stringify({ po: req.body.po })
             }
 
-            const response = await fetch('http://202.74.246.133:81/sap/dev/po_display.php', requestOptions)
+            const response = await fetch('http://202.74.246.133:81/sap/qs/po_display.php', requestOptions)
             const data = await response.json()
 
             if (data === 'Could not open connection') {

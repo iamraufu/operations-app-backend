@@ -25,7 +25,7 @@ const POGRN = async (req, res) => {
                   body: JSON.stringify(bodyDetails)
             }
 
-            const response = await fetch('http://202.74.246.133:81/sap/dev/create_grn.php', requestOptions)
+            const response = await fetch('http://202.74.246.133:81/sap/qs/create_grn.php', requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E') {
@@ -125,7 +125,7 @@ const STOGRN = async (req, res) => {
                   method: 'POST',
                   body: JSON.stringify(bodyDetails)
             }
-            const response = await fetch('http://202.74.246.133:81/sap/dev/create_grn.php', requestOptions)
+            const response = await fetch('http://202.74.246.133:81/sap/qs/create_grn.php', requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E') {

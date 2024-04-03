@@ -16,7 +16,7 @@ const stoList = async (req, res) => {
                   )
             }
 
-            const response = await fetch('http://202.74.246.133:81/sap/dev/get_po.php', requestOptions)
+            const response = await fetch('http://202.74.246.133:81/sap/qs/get_po.php', requestOptions)
             const data = await response.json()
 
             if (data.PO_FOUND > 0) {
@@ -100,7 +100,7 @@ const multipleStoList = async (req, res) => {
                         )
                   }
 
-                  return fetch('http://202.74.246.133:81/sap/dev/get_po.php', requestOptions)
+                  return fetch('http://202.74.246.133:81/sap/qs/get_po.php', requestOptions)
             })
 
             const responses = await Promise.all(requests)
@@ -161,7 +161,7 @@ const stoDisplay = async (req, res) => {
                   body: JSON.stringify({ sto: req.body.sto })
             }
 
-            const response = await fetch('http://202.74.246.133:81/sap/dev/sto_display.php', requestOptions)
+            const response = await fetch('http://202.74.246.133:81/sap/qs/sto_display.php', requestOptions)
             const data = await response.json()
 
             if (data === 'Could not open connection') {
