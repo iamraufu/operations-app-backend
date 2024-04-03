@@ -47,7 +47,7 @@ const generateChildPackingList = async (req, res) => {
 
 const getChildPackingList = async (req, res) => {
       try {
-            await search(req, res, '')
+            await search(req, res)
       }
       catch (err) {
             res.status(500).json({
@@ -57,15 +57,9 @@ const getChildPackingList = async (req, res) => {
       }
 }
 
-const search = async (req, res, status) => {
+const search = async (req, res) => {
 
-      let filter = {
-            status
-      };
-
-      if (status === '') {
-            filter = {};
-      }
+      let filter = {};
 
       if (req.query.filterBy && req.query.value) {
             filter[req.query.filterBy] = req.query.value;
