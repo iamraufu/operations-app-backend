@@ -31,7 +31,7 @@ const POGRN = async (req, res) => {
             if (data?.RETURN[0]?.TYPE === 'E') {
                   res.status(404).json({
                         status: false,
-                        message: data.RETURN[0].MESSAGE
+                        message: data.RETURN[0].MESSAGE.trim()
                   })
             }
             else {
@@ -131,7 +131,7 @@ const STOGRN = async (req, res) => {
             if (data?.RETURN[0]?.TYPE === 'E') {
                   res.status(404).json({
                         status: false,
-                        message: data.RETURN[0].MESSAGE
+                        message: data.RETURN[0].MESSAGE.trim()
                   })
             }
             else {
