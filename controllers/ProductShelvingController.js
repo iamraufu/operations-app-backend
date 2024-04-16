@@ -11,19 +11,31 @@ const assignToReadyForShelving = async (req, res) => {
                   quantity
             }
 
-            const isAlreadyReadyForShelving = Boolean(await ProductShelvingModel.findOne(filter))
+            const alreadyReadyForShelving = await ProductShelvingModel.findOne(filter)
+            const isAlreadyReadyForShelving = Boolean(alreadyReadyForShelving)
 
             if (isAlreadyReadyForShelving) {
-                  return res.status(409).send({
-                        status: false,
-                        message: `Material ${code} with quantity of ${receivedQuantity} of PO ${po} has already been assigned.`
-                  })
-            }
-            else if(receivedQuantity > quantity){
-                  return res.status(409).send({
-                        status: false,
-                        message: `Received Quantity ${receivedQuantity} cannot exceed PO Quantity ${quantity}`
-                  })
+                  if (alreadyReadyForShelving.receivedQuantity <= alreadyReadyForShelving.quantity) {
+
+                        alreadyReadyForShelving.receivedQuantity += receivedQuantity
+
+                        if (alreadyReadyForShelving.receivedQuantity > alreadyReadyForShelving.quantity) {
+                              return res.status(409).send({
+                                    status: false,
+                                    message: `Received Quantity ${alreadyReadyForShelving.receivedQuantity} cannot exceed PO Quantity ${alreadyReadyForShelving.quantity}`
+                              })
+                        }
+                        else {
+
+                              await alreadyReadyForShelving.save()
+
+                              return res.status(201).send({
+                                    status: false,
+                                    message: `Material ${code} with quantity of ${alreadyReadyForShelving.receivedQuantity} of PO ${po} is ready for shelving`,
+                                    data: alreadyReadyForShelving
+                              })
+                        }
+                  }
             }
             else {
                   const data = await ProductShelvingModel.create(req.body)
@@ -34,7 +46,6 @@ const assignToReadyForShelving = async (req, res) => {
                         data
                   })
             }
-
       }
       catch (err) {
             res.status(500).json({
@@ -61,7 +72,7 @@ const getReadyForShelving = async (req, res) => {
 const updateProductInShelf = async (req, res) => {
       try {
             const { id } = req.params
-            
+
             if (!mongoose.Types.ObjectId.isValid(id)) {
                   return res.status(404).json({
                         status: false,
@@ -71,7 +82,7 @@ const updateProductInShelf = async (req, res) => {
 
             let readyForShelvingProduct = await ProductShelvingModel.findById(id)
 
-            if(readyForShelvingProduct === null){
+            if (readyForShelvingProduct === null) {
                   return res.status(404).json({
                         status: false,
                         message: `Product Id incorrect`
@@ -142,11 +153,11 @@ const getInShelf = async (req, res) => {
 }
 
 const search = async (req, res, status) => {
-      
+
       let filter = {
             status
       };
-      
+
       if (status === '') {
             filter = {};
       }
@@ -174,14 +185,14 @@ const search = async (req, res, status) => {
             totalItems
       };
 
-      if(items.length) {
+      if (items.length) {
             return res.status(200).json(responseObject);
       }
 
       else {
             return res.status(401).json({
                   status: false,
-                  message:"Nothing found",
+                  message: "Nothing found",
                   items
             });
       }
