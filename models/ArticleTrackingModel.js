@@ -9,10 +9,6 @@ const articleTrackingSchema = new mongoose.Schema({
             type: String,
             required: true
       },
-      po: {
-            type: String,
-            default: ""
-      },
       sto: {
             type: String,
             default: ""
@@ -29,6 +25,10 @@ const articleTrackingSchema = new mongoose.Schema({
             type: String,
             default: "in document",
             enum: ["in document", "inbound picking", "inbound picked", "inbound packing", "inbound packed", "outbound delivering", "outbound delivered", "in transit"]
+      },
+      expiryDate: {
+            type: Date,
+            default: null
       },
       quantity: {
             type: Number,
