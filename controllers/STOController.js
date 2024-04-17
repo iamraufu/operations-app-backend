@@ -83,8 +83,8 @@ const stoList = async (req, res) => {
 
 const multipleStoList = async (req, res) => {
       try {
-            const { from, to, site } = req.query
-            const sites = site.split(',')
+            const { from, to, receivingPlant, supplyingPlant } = req.query
+            const sites = receivingPlant.split(',')
 
             const requests = sites.map(site => {
 
@@ -114,7 +114,8 @@ const multipleStoList = async (req, res) => {
             ({
                   sto: innerItem.EBELN.trim(),
                   createdOnSAP: innerItem.AEDAT.trim(),
-                  supplyingPlant: item.IN_SITE[0].WERKS_LOW.trim(),
+                  supplyingPlant,
+                  receivingPlant: item.IN_SITE[0].WERKS_LOW.trim(),
                   sku: item.POLINES.filter(s => s.EBELN === innerItem.EBELN).length
             })
             )).flat()
