@@ -76,7 +76,7 @@ const stoList = async (req, res) => {
       catch (err) {
             res.status(500).json({
                   status: false,
-                  message: `${err}`
+                  message: `${err.message === 'fetch failed' ? 'MIS Logged Off the PC where BAPI is Hosted': err}`
             })
       }
 }
@@ -150,7 +150,7 @@ const multipleStoList = async (req, res) => {
       catch (err) {
             res.status(500).json({
                   status: false,
-                  message: `${err}`
+                  message: `${err.message === 'fetch failed' ? 'MIS Logged Off the PC where BAPI is Hosted': err}`
             })
       }
 }
@@ -230,7 +230,7 @@ const stoDisplay = async (req, res) => {
       catch (err) {
             res.status(500).json({
                   status: false,
-                  message: `${err}`
+                  message: `${err.message === 'fetch failed' ? 'MIS Logged Off the PC where BAPI is Hosted': err}`
             })
       }
 }

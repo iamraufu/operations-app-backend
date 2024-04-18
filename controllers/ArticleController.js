@@ -22,7 +22,7 @@ const products = async (req, res) => {
             catch (err) {
                   res.status(500).json({
                         status: false,
-                        message: `${err}`
+                        message: `${err.message === 'fetch failed' ? 'MIS Logged Off the PC where BAPI is Hosted': err}`
                   })
             }
       }
@@ -68,7 +68,7 @@ const singleProduct = async (req, res) => {
             catch (err) {
                   res.status(500).json({
                         status: false,
-                        message: `${err}`
+                        message: `${err.message === 'fetch failed' ? 'MIS Logged Off the PC where BAPI is Hosted': err}`
                   })
             }
       }
@@ -113,7 +113,7 @@ const productByMC = async (req, res) => {
             catch (err) {
                   res.status(500).json({
                         status: false,
-                        message: `${err}`
+                        message: `${err.message === 'fetch failed' ? 'MIS Logged Off the PC where BAPI is Hosted': err}`
                   })
             }
       }

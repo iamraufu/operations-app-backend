@@ -76,7 +76,7 @@ const poList = async (req, res) => {
       catch (err) {
             res.status(500).json({
                   status: false,
-                  message: `${err}`
+                  message: `${err.message === 'fetch failed' ? 'MIS Logged Off the PC where BAPI is Hosted': err}`
             })
       }
 }
@@ -156,7 +156,7 @@ const poDisplay = async (req, res) => {
       catch (err) {
             res.status(500).json({
                   status: false,
-                  message: `${err}`
+                  message: `${err.message === 'fetch failed' ? 'MIS Logged Off the PC where BAPI is Hosted': err}`
             })
       }
 }
