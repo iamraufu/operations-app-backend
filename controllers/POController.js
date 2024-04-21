@@ -16,7 +16,7 @@ const poList = async (req, res) => {
                   })
             }
 
-            const response = await fetch('http://202.74.246.133:81/sap/qs/get_po.php', requestOptions)
+            const response = await fetch('http://202.74.246.133:81/sap/prod/get_po.php', requestOptions)
             const data = await response.json()
 
             if (data.PO_FOUND > 0) {
@@ -81,6 +81,48 @@ const poList = async (req, res) => {
       }
 }
 
+const poReleased = async (req, res) => {
+      try {
+            const requestOptions = {
+                  method: 'POST',
+                  body: JSON.stringify({ po: req.body.po })
+            }
+
+            const response = await fetch('http://202.74.246.133:81/sap/qs/get_po_released.php', requestOptions)
+            const data = await response.json()
+
+            if (data === 'Could not open connection') {
+                  res.status(503).json({
+                        status: false,
+                        message: `${data}`
+                  })
+            }
+            else if (data?.RETURN[0]?.TYPE === 'E') {
+                  res.status(404).json({
+                        status: false,
+                        message: data.RETURN[0].MESSAGE
+                  })
+            }
+            else {
+                  res.status(200).json({
+                        status: true,
+                        message: "Successfully retrieved PO released",
+                        sap: data,
+                        // data: {
+                        //       releasedBy: RELEASE_ALREADY_POSTED.REL_CD_TX1.trim(),
+                        //       releasedLevel: RELEASE_ALREADY_POSTED.REL_CODE1.trim()
+                        // }
+                  })
+            }
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err.message === 'fetch failed' ? 'MIS Logged Off the PC where BAPI is Hosted': err}`
+            })
+      }
+}
+
 const poDisplay = async (req, res) => {
       try {
             const requestOptions = {
@@ -88,7 +130,7 @@ const poDisplay = async (req, res) => {
                   body: JSON.stringify({ po: req.body.po })
             }
 
-            const response = await fetch('http://202.74.246.133:81/sap/qs/po_display.php', requestOptions)
+            const response = await fetch('http://202.74.246.133:81/sap/prod/po_display.php', requestOptions)
             const data = await response.json()
 
             if (data === 'Could not open connection') {
@@ -163,5 +205,6 @@ const poDisplay = async (req, res) => {
 
 module.exports = {
       poList,
+      poReleased,
       poDisplay
 }
