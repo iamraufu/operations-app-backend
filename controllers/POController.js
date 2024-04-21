@@ -107,11 +107,13 @@ const poReleased = async (req, res) => {
                   res.status(200).json({
                         status: true,
                         message: "Successfully retrieved PO released",
-                        sap: data,
-                        // data: {
-                        //       releasedBy: RELEASE_ALREADY_POSTED.REL_CD_TX1.trim(),
-                        //       releasedLevel: RELEASE_ALREADY_POSTED.REL_CODE1.trim()
-                        // }
+                        // sap: data,
+                        data: {
+                              poReleasedStatus: data.GENERAL_RELEASE_INFO.REL_IND.trim() === "R" ? true : false,
+                              poReleased: data.GENERAL_RELEASE_INFO.REL_IND_TX.trim(),
+                              releasedBy: data.RELEASE_ALREADY_POSTED.REL_CD_TX1.trim(),
+                              releasedLevel: data.RELEASE_ALREADY_POSTED.REL_CODE1.trim()
+                        }
                   })
             }
       }
