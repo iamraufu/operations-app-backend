@@ -11,6 +11,7 @@ const ProductShelvingRoutes = require('./routes/ProductShelvingRoutes')
 const PORoutes = require('./routes/PORoutes')
 const STORoutes = require('./routes/STORoutes')
 const GRNRoutes = require('./routes/GRNRoutes')
+const PendingForGRNRoutes = require('./routes/PendingForGRNRoutes')
 const DNRoutes = require('./routes/DNRoutes')
 const STOTrackingRoutes = require('./routes/STOTrackingRoutes')
 const POTrackingRoutes = require('./routes/POTrackingRoutes')
@@ -45,6 +46,7 @@ app.use("/bapi/po", PORoutes) // PO API
 app.use("/bapi/sto", STORoutes) // STO API
 app.use("/bapi/dn", DNRoutes) // DN API
 app.use("/bapi/grn", GRNRoutes) // PO & STO to GRN API
+app.use("/api/grn", PendingForGRNRoutes) // PO & STO to GRN API
 
 app.use('/api/product-shelving', ProductShelvingRoutes) // Product Shelving API
 app.use('/api/sto-tracking', STOTrackingRoutes) // STO Tracking API

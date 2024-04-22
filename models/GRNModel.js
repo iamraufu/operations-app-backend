@@ -1,0 +1,83 @@
+const mongoose = require("mongoose")
+
+const grnSchema = new mongoose.Schema({
+      po: {
+            type: String,
+            required: true
+      },
+      grn: {
+            type: String,
+      },
+      status: {
+            type: String,
+            required: true
+      },
+      createdAt: {
+            type: Date,
+            default: new Date(),
+            required: true
+      },
+      updatedAt: {
+            type: Date
+      },
+      createdBy: {
+            type: mongoose.Types.ObjectId,
+            ref: "User",
+            required: true
+      },
+      updatedBy: {
+            type: mongoose.Types.ObjectId,
+            ref: "User",
+            required: true
+      },
+      grnData: {
+            type: [{
+                  movementType: {
+                        type: String,
+                        required: true
+                  },
+                  movementIndicator: {
+                        type: String,
+                        required: true
+                  },
+                  po: {
+                        type: String,
+                        required: true
+                  },
+                  poItem: {
+                        type: String,
+                        required: true
+                  },
+                  material: {
+                        type: String,
+                        required: true
+                  },
+                  plant: {
+                        type: String,
+                        required: true
+                  },
+                  storageLocation: {
+                        type: String,
+                        required: true
+                  },
+                  quantity: {
+                        type: Number,
+                        required: true
+                  },
+                  updatedQuantity: {
+                        type: Number,
+                        default: 0
+                  },
+                  uom: {
+                        type: String,
+                        required: true
+                  },
+                  uomIso: {
+                        type: String,
+                        required: true
+                  }
+            }],
+      }
+})
+
+module.exports = mongoose.model("GRN", grnSchema)
