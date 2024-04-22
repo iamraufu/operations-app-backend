@@ -88,7 +88,7 @@ const poReleased = async (req, res) => {
                   body: JSON.stringify({ po: req.body.po })
             }
 
-            const response = await fetch('http://202.74.246.133:81/sap/qs/get_po_released.php', requestOptions)
+            const response = await fetch('http://202.74.246.133:81/sap/prod/get_po_released.php', requestOptions)
             const data = await response.json()
 
             if (data === 'Could not open connection') {
