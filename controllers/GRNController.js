@@ -205,13 +205,12 @@ const STOGRN = async (req, res) => {
 const pendingPOForGRN = async (req, res) => {
       try {
 
-            const grn = await GRNModel.create(req.body)
+            await GRNModel.create(req.body)
 
             return res.status(201).send(
                   {
                         status: true,
-                        message: "GRN data posted successfully!",
-                        items: grn
+                        message: "GRN data posted successfully!"
                   })
       }
       catch (err) {

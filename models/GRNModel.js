@@ -28,7 +28,6 @@ const grnSchema = new mongoose.Schema({
       updatedBy: {
             type: mongoose.Types.ObjectId,
             ref: "User",
-            required: true
       },
       grnData: {
             type: [{
