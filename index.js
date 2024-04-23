@@ -18,6 +18,7 @@ const POTrackingRoutes = require('./routes/POTrackingRoutes')
 const ArticleTrackingRoutes = require('./routes/ArticleTrackingRoutes')
 const ChildPackingRoutes = require('./routes/ChildPackingRoutes')
 const InventoryRoutes = require('./routes/InventoryRoutes')
+const SMSRoutes = require('./routes/SMSRoutes')
 
 require('dotenv').config()
 
@@ -54,6 +55,8 @@ app.use('/api/po-tracking', POTrackingRoutes) // PO Tracking API
 app.use('/api/article-tracking', ArticleTrackingRoutes) // Article Tracking API
 app.use('/api/child-packing', ChildPackingRoutes) // Child Packing API
 app.use('/api/inventory', InventoryRoutes) // Child Packing API
+
+app.use('/api/send-sms', SMSRoutes) // SMS API
 
 connectDB()
 
