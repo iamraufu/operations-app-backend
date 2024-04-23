@@ -205,12 +205,13 @@ const STOGRN = async (req, res) => {
 const pendingPOForGRN = async (req, res) => {
       try {
 
-            await GRNModel.create(req.body)
+           const grn = await GRNModel.create(req.body)
 
             return res.status(201).send(
                   {
                         status: true,
-                        message: "GRN data posted successfully!"
+                        message: "GRN data posted successfully!",
+                        data: grn
                   })
       }
       catch (err) {
@@ -235,6 +236,9 @@ const getPendingPOForGRN = async (req, res) => {
 
 const updatePendingPOForGRN = async (req, res) => {
       try {
+
+            const {id} = req.params
+
             if (!mongoose.Types.ObjectId.isValid(id)) {
                   return res.status(404).json({
                         status: false,
