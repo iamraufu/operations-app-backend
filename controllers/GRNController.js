@@ -1,6 +1,7 @@
 const POTrackingModel = require('../models/POTrackingModel');
 const STOTrackingModel = require('../models/STOTrackingModel');
 const GRNModel = require('../models/GRNModel');
+const mongoose = require('mongoose');
 
 const POGRN = async (req, res) => {
       try {
@@ -205,7 +206,7 @@ const STOGRN = async (req, res) => {
 const pendingPOForGRN = async (req, res) => {
       try {
 
-           const grn = await GRNModel.create(req.body)
+            const grn = await GRNModel.create(req.body)
 
             return res.status(201).send(
                   {
@@ -237,7 +238,7 @@ const getPendingPOForGRN = async (req, res) => {
 const updatePendingPOForGRN = async (req, res) => {
       try {
 
-            const {id} = req.params
+            const { id } = req.params
 
             if (!mongoose.Types.ObjectId.isValid(id)) {
                   return res.status(404).json({
@@ -255,6 +256,8 @@ const updatePendingPOForGRN = async (req, res) => {
                         message: `GRN doesn't exist`,
                   });
             }
+
+            console.log(req.body)
 
             grnDetails = {
                   ...req.body,
@@ -277,6 +280,7 @@ const updatePendingPOForGRN = async (req, res) => {
             })
       }
       catch (err) {
+            console.log(err)
             res.status(500).json({
                   status: false,
                   message: `${err}`
