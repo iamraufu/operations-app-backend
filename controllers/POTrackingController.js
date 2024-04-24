@@ -53,11 +53,12 @@ const updatePOTracking = async (req, res) => {
             //             message: `PO id incorrect`
             //       })
             // }
+
             // else if(POTracking.picker.length > 0) {
             //       POTracking.status = "in picking"
             // }
 
-            const { po, status } = req.body
+            const { po } = req.body
 
             let POTracking = await POTrackingModel.findOne({ po })
             const isPOInTrack = Boolean(POTracking)
@@ -69,15 +70,26 @@ const updatePOTracking = async (req, res) => {
                   })
             }
 
-            POTracking.status = status
+            // POTracking.status = status
 
-            await POTracking.save()
+            // await POTracking.save()
+
+            console.log(po, req.body);
+
+            let updatedPOTracking = await POTrackingModel.findOneAndUpdate
+                  (
+                        {po: po}, req.body,
+                        {
+                              new: true,
+                              runValidators: true
+                        }
+                  )
 
             return res.status(201).send(
                   {
                         status: true,
                         message: "Updated PO Tracking",
-                        poInTracking: POTracking
+                        poInTracking: updatedPOTracking
                   })
       }
       catch (err) {

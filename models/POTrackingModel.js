@@ -42,6 +42,10 @@ const poTrackingSchema = new mongoose.Schema({
             required: true,
             immutable: true
       },
+      receivedSku: {
+            type: Number,
+            default: 0
+      },
       status: {
             type: String,
             default: 'pending for grn'
