@@ -30,7 +30,7 @@ const assignToReadyForShelving = async (req, res) => {
                               await alreadyReadyForShelving.save()
 
                               return res.status(201).send({
-                                    status: false,
+                                    status: true,
                                     message: `Material ${code} with quantity of ${alreadyReadyForShelving.receivedQuantity} of PO ${po} is ready for shelving`,
                                     data: alreadyReadyForShelving
                               })
