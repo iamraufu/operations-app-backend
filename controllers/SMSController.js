@@ -39,7 +39,13 @@ const sendSMS = async (req, res) => {
             })
       }
 
-      const message = `Dear ${name}, your coupon code is ${unusedPromoCode.code}`
+      // const message = `Dear ${name}, your coupon code is ${unusedPromoCode.code}`
+      
+      const message = `সম্মানিত ক্রেতা,
+      অভিনন্দন! স্বপ্ন থেকে ট্যাং ২ কেজি পণ্যটি ক্রয় করে আপনি একটি কুপন বিজয়ী হয়েছেন।
+      কুপন কোড: ${unusedPromoCode.code}
+      এই কুপনটি ব্যবহার করে স্বপ্ন থেকে ৫০০ টাকার ফ্রি বাজার বুঝে নিন। 
+      *শ/প্র স্বপ্ন`
       const smsUrl = `https://api.mobireach.com.bd/SendTextMessage?Username=shwapno&Password=Shw@pno@dhk2023&From=8801847170370&To=${phone}&Message=${message}`
 
       if (!isSmsAlreadySent && isUnusedPromoCodeAvailable) {
