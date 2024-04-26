@@ -12,6 +12,10 @@ const inventorySchema = new mongoose.Schema({
             type: Number,
             required: true
       },
+      onHold: {
+            type: Number,
+            default: 0
+      },
       site: {
             type: String,
             required: true
@@ -21,13 +25,13 @@ const inventorySchema = new mongoose.Schema({
             required: true,
             default: 'active'
       },
-      updatedAt: {
+      createdAt: {
             type: Date,
             default: new Date()
       },
-      onHold: {
-            type: Number,
-            default: 0
+      updatedAt: {
+            type: Date,
+            default: null
       },
       bin: {
             type: String,
@@ -36,6 +40,32 @@ const inventorySchema = new mongoose.Schema({
       gondola: {
             type: String,
             required: true,
+      },
+      tracking: {
+            type: [{
+                  batch: {
+                        type: String,
+                        default: null
+                  },
+                  expiryDate: {
+                        type: Date,
+                        default: null
+                  },
+                  quantity: {
+                        type: Number,
+                        required: true,
+                        default: 0
+                  },
+                  createdAt: {
+                        type: Date,
+                        default: new Date(),
+                        immutable: true
+                  },
+                  updatedAt: {
+                        type: Date,
+                        default: null
+                  }
+            }]
       }
 })
 

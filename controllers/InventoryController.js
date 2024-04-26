@@ -2,7 +2,16 @@ const InventoryModel = require('../models/InventoryModel')
 
 const addStock = async (req, res) => {
       try {
-            const { material, site, bin, gondola, quantity } = req.body
+            const {
+                  material,
+                  description,
+                  quantity,
+                  site,
+                  bin,
+                  gondola,
+                  batch,
+                  expiryDate
+            } = req.body
 
             const filter = {
                   material,
@@ -14,17 +23,42 @@ const addStock = async (req, res) => {
             let inventoryItem = await InventoryModel.findOne(filter);
 
             if (!inventoryItem) {
-                  const inventoryItem = await InventoryModel.create(req.body)
+
+                  let inventoryDetails = {
+                        material,
+                        description,
+                        quantity,
+                        site,
+                        bin,
+                        gondola,
+                        tracking: [
+                              {
+                                    batch,
+                                    expiryDate,
+                                    quantity
+                              }
+                        ]
+                  }
+
+                  const inventoryItem = await InventoryModel.create(inventoryDetails)
 
                   return res.status(201).send(
                         {
                               status: true,
                               message: `Stock added successfully for ${material} at ${site} in ${bin} of ${gondola}`,
                               inventoryItem,
-                        })
+                        }
+                  )
             }
             else {
                   inventoryItem.quantity += quantity;
+                  inventoryItem.updatedAt = new Date()
+                  inventoryItem.tracking.push({
+                        batch,
+                        expiryDate,
+                        quantity
+                  })
+
                   await inventoryItem.save();
 
                   return res.status(200).send(
@@ -56,7 +90,7 @@ const removeStock = async (req, res) => {
                   gondola
             }
 
-            let inventoryItem = await InventoryModel.findOne(filter);
+            let inventoryItem = await InventoryModel.findOne(filter)
 
             if (!inventoryItem) {
                   res.status(404).json({
@@ -72,8 +106,31 @@ const removeStock = async (req, res) => {
                   })
             }
 
-            inventoryItem.quantity -= quantity;
-            inventoryItem.onHold = inventoryItem.onHold - quantity;
+            // Added for removing quantity from array of objects
+            const items = inventoryItem.tracking
+            let remainingQuantity = quantity
+
+            for (let i = 0; i < items.length; i++) {
+                  const item = items[i];
+
+                  if (remainingQuantity >= item.quantity) {
+                        remainingQuantity -= item.quantity;
+                        item.updatedAt = new Date()
+                        items.splice(i, 1);
+                        i--;
+                  }
+                  else {
+                        item.quantity -= remainingQuantity;
+                        item.updatedAt = new Date()
+                        break;
+                  }
+            }
+
+            // Till above
+
+            // inventoryItem.quantity -= quantity;
+            inventoryItem.onHold -= quantity;
+            inventoryItem.updatedAt = new Date()
 
             await inventoryItem.save();
 
@@ -159,17 +216,24 @@ const addHoldStock = async (req, res) => {
             let inventoryItem = await InventoryModel.findOne(filter);
 
             if (!inventoryItem) {
-                  const inventoryItem = await InventoryModel.create(req.body)
+                  // const inventoryItem = await InventoryModel.create(req.body)
 
-                  return res.status(201).send(
-                        {
-                              status: true,
-                              message: `Stock added successfully for ${material} at ${site} in ${bin} of ${gondola}`,
-                              inventoryItem,
-                        })
+                  // return res.status(201).send(
+                  //       {
+                  //             status: true,
+                  //             message: `Stock added successfully for ${material} at ${site} in ${bin} of ${gondola}`,
+                  //             inventoryItem,
+                  //       }
+                  // )
+
+                  res.status(404).json({
+                        status: false,
+                        message: `Material ${material} not found in inventory`
+                  })
             }
             else {
                   inventoryItem.onHold += onHold;
+                  inventoryItem.updatedAt = new Date()
                   await inventoryItem.save();
 
                   return res.status(200).send(
@@ -203,17 +267,24 @@ const removeHoldStock = async (req, res) => {
             let inventoryItem = await InventoryModel.findOne(filter);
 
             if (!inventoryItem) {
-                  const inventoryItem = await InventoryModel.create(req.body)
+                  // const inventoryItem = await InventoryModel.create(req.body)
 
-                  return res.status(201).send(
-                        {
-                              status: true,
-                              message: `Stock added successfully for ${material} at ${site} in ${bin} of ${gondola}`,
-                              inventoryItem,
-                        })
+                  // return res.status(201).send(
+                  //       {
+                  //             status: true,
+                  //             message: `Stock added successfully for ${material} at ${site} in ${bin} of ${gondola}`,
+                  //             inventoryItem,
+                  //       }
+                  // )
+
+                  res.status(404).json({
+                        status: false,
+                        message: `Material ${material} not found in inventory`
+                  })
             }
             else {
                   inventoryItem.onHold -= onHold;
+                  inventoryItem.updatedAt = new Date()
                   await inventoryItem.save();
 
                   return res.status(200).send(
