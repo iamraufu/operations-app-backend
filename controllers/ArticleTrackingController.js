@@ -2,20 +2,49 @@ const ArticleTrackingModel = require('../models/ArticleTrackingModel');
 
 const postArticleTracking = async (req, res) => {
       try {
-            const { po, sto, code, quantity } = req.body
+            const { po, sto, code, quantity, inboundPickedQuantity, inboundPackedQuantity } = req.body
+            
             const filter = {
-                  po: po || "",
-                  sto: sto || "",
+                  po: po,
+                  sto: sto,
                   code,
                   quantity
             }
 
-            const isAlreadyArticleInTracking = Boolean(await ArticleTrackingModel.findOne(filter))
+            let articleInTracking = await ArticleTrackingModel.findOne(filter)
+            const isAlreadyArticleInTracking = Boolean(articleInTracking)
+
+            if((articleInTracking.inboundPickedQuantity + inboundPickedQuantity) > quantity){
+                  return res.status(409).json({
+                        status: false,
+                        message: `Inbound Picked Quantity exceeds quantity`
+                  })
+            }
+
+            if((articleInTracking.inboundPackedQuantity + inboundPackedQuantity) > articleInTracking.inboundPickedQuantity){
+                  return res.status(409).json({
+                        status: false,
+                        message: `Inbound Packed Quantity exceeds Inbound Picked Quantity`
+                  })
+            }
+
+            if((articleInTracking.inboundPackedQuantity + inboundPackedQuantity) > quantity){
+                  return res.status(409).json({
+                        status: false,
+                        message: `Inbound Packed Quantity exceeds quantity`
+                  })
+            }
 
             if (isAlreadyArticleInTracking) {
+                  articleInTracking.inboundPickedQuantity += inboundPickedQuantity ? inboundPickedQuantity : 0
+                  articleInTracking.inboundPackedQuantity += inboundPackedQuantity ? inboundPackedQuantity : 0
+
+                  await articleInTracking.save()
+
                   return res.status(409).send({
                         status: false,
-                        message: `Material ${code} with quantity of ${quantity} of ${po || sto} has already been tracked`
+                        message: `Material ${code} with quantity of ${quantity} of ${po || sto} has been tracked`,
+                        data: articleInTracking
                   })
             }
             else {

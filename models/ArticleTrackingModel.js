@@ -11,15 +11,15 @@ const articleTrackingSchema = new mongoose.Schema({
       },
       sto: {
             type: String,
-            default: ""
+            default: null
       },
       dn: {
             type: String,
-            default: ""
+            default: null
       },
       grn: {
             type: String,
-            default: ""
+            default: null
       },
       status: {
             type: String,
@@ -44,7 +44,7 @@ const articleTrackingSchema = new mongoose.Schema({
       },
       inboundPicker: {
             type: String,
-            default: '',
+            default: null
       },
       inboundPickerId: {
             type: String,
@@ -76,7 +76,7 @@ const articleTrackingSchema = new mongoose.Schema({
       },
       outboundPicker: {
             type: String,
-            default: ""
+            default: null
       },
       outboundPickingStartingTime: {
             type: Date,
