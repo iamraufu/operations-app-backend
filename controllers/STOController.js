@@ -181,46 +181,104 @@ const stoDisplay = async (req, res) => {
                   res.status(200).json({
                         status: true,
                         message: "Successfully retrieved STO details",
+
+                        // Previous BAPI Display Data
+                        // data: {
+                        //       sto: data.PO_HEADER.PO_NUMBER.trim(),
+                        //       companyCode: data.PO_HEADER.CO_CODE.trim(),
+                        //       documentType: data.PO_HEADER.DOC_TYPE.trim(),
+                        //       createdDate: data.PO_HEADER.CREATED_ON.trim(),
+                        //       createdBy: data.PO_HEADER.CREATED_BY.trim(),
+                        //       documentDate: data.PO_HEADER.DOC_DATE.trim(),
+                        //       supplyingPlant: data.PO_HEADER.SUPPL_PLNT.trim(),
+                        //       supplyingPlantName: data.PO_ADDRESS.NAME1.trim(),
+                        //       supplyingPlantAddress: `${data.PO_ADDRESS.STREET.trim()} ${data.PO_ADDRESS.CITY1.trim()} - ${data.PO_ADDRESS.POST_CODE1.trim()}`,
+                        //       items: data.PO_ITEMS.map(item => (
+                        //             {
+                        //                   sto: item.PO_NUMBER.trim(),
+                        //                   stoItem: item.PO_ITEM.trim(),
+                        //                   changedOn: item.CHANGED_ON.trim(),
+                        //                   material: item.MATERIAL.trim(),
+                        //                   companyCode: item.CO_CODE.trim(),
+                        //                   storageLocation: item.STORE_LOC.trim(),
+                        //                   description: item.SHORT_TEXT.trim(),
+                        //                   receivingPlant: item.PLANT.trim(),
+                        //                   materialGroup: item.MAT_GRP.trim(),
+                        //                   materialType: item.MAT_TYPE.trim(),
+                        //                   quantity: item.QUANTITY,
+                        //                   targetQuantity: item.TARGET_QTY,
+                        //                   unit: item.UNIT.trim(),
+                        //                   orderPricingUnit: item.ORDERPR_UN.trim(),
+                        //                   stoUnit: item.PO_UNIT_ISO.trim(),
+                        //                   orderPricingUnit: item.ORDERPR_UN_ISO.trim(),
+                        //                   baseUom: item.BASE_UOM_ISO.trim(),
+                        //                   weightUnit: item.WEIGHTUNIT_ISO.trim(),
+                        //                   netPrice: item.NET_PRICE,
+                        //                   pricingUnit: item.PRICE_UNIT,
+                        //                   netValue: item.NET_VALUE,
+                        //                   grossValue: item.GROS_VALUE,
+                        //                   effectiveValue: item.EFF_VALUE,
+                        //                   netWeight: item.NET_WEIGHT,
+                        //                   baseWeight: item.BASE_UNIT.trim(),
+                        //                   weightUnit: item.WEIGHTUNIT.trim(),
+                        //                   pricingDate: item.PRICE_DATE.trim(),
+                        //                   barcode: item.EAN_UPC.trim() ? item.EAN_UPC.trim() : item.MATERIAL.trim()
+                        //             }
+                        //       ))
+                        // }
+
+                        // Current Details from STO Display BAPI
                         data: {
-                              sto: data.PO_HEADER.PO_NUMBER.trim(),
-                              companyCode: data.PO_HEADER.CO_CODE.trim(),
-                              documentType: data.PO_HEADER.DOC_TYPE.trim(),
-                              createdDate: data.PO_HEADER.CREATED_ON.trim(),
-                              createdBy: data.PO_HEADER.CREATED_BY.trim(),
-                              documentDate: data.PO_HEADER.DOC_DATE.trim(),
-                              supplyingPlant: data.PO_HEADER.SUPPL_PLNT.trim(),
-                              supplyingPlantName: data.PO_ADDRESS.NAME1.trim(),
-                              supplyingPlantAddress: `${data.PO_ADDRESS.STREET.trim()} ${data.PO_ADDRESS.CITY1.trim()} - ${data.PO_ADDRESS.POST_CODE1.trim()}`,
-                              items: data.PO_ITEMS.map(item => (
+                              sto: data.POHEADER.PO_NUMBER.trim(),
+                              companyCode: data.POHEADER.COMP_CODE.trim(),
+                              documentType: data.POHEADER.DOC_TYPE.trim(),
+                              createdDate: data.POHEADER.CREAT_DATE.trim(),
+                              createdBy: data.POHEADER.CREATED_BY.trim(),
+                              documentDate: data.POHEADER.DOC_DATE.trim(),
+                              supplyingPlant: data.POHEADER.VENDOR.trim(),
+                              items: data.POITEM.map(item => (
                                     {
-                                          sto: item.PO_NUMBER.trim(),
                                           stoItem: item.PO_ITEM.trim(),
-                                          changedOn: item.CHANGED_ON.trim(),
                                           material: item.MATERIAL.trim(),
-                                          companyCode: item.CO_CODE.trim(),
-                                          storageLocation: item.STORE_LOC.trim(),
                                           description: item.SHORT_TEXT.trim(),
                                           receivingPlant: item.PLANT.trim(),
-                                          materialGroup: item.MAT_GRP.trim(),
-                                          materialType: item.MAT_TYPE.trim(),
                                           quantity: item.QUANTITY,
-                                          targetQuantity: item.TARGET_QTY,
-                                          unit: item.UNIT.trim(),
+                                          unit: item.PO_UNIT.trim(),
                                           orderPricingUnit: item.ORDERPR_UN.trim(),
-                                          stoUnit: item.PO_UNIT_ISO.trim(),
+                                          poUnit: item.PO_UNIT_ISO.trim(),
                                           orderPricingUnit: item.ORDERPR_UN_ISO.trim(),
-                                          baseUom: item.BASE_UOM_ISO.trim(),
                                           weightUnit: item.WEIGHTUNIT_ISO.trim(),
                                           netPrice: item.NET_PRICE,
                                           pricingUnit: item.PRICE_UNIT,
-                                          netValue: item.NET_VALUE,
-                                          grossValue: item.GROS_VALUE,
-                                          effectiveValue: item.EFF_VALUE,
-                                          netWeight: item.NET_WEIGHT,
-                                          baseWeight: item.BASE_UNIT.trim(),
                                           weightUnit: item.WEIGHTUNIT.trim(),
-                                          pricingDate: item.PRICE_DATE.trim(),
-                                          barcode: item.EAN_UPC.trim() ? item.EAN_UPC.trim() : item.MATERIAL.trim()
+                                          pricingDate: item.PRICE_DATE.trim()
+                                    }
+                              )),
+                              history: data.POHISTORY.map(item => (
+                                    {
+                                          sto: item.REF_DOC_NO.trim(),
+                                          stoItem: item.PO_ITEM.trim(),
+                                          grn: item.MAT_DOC.trim(),
+                                          grnItem: item.MATDOC_ITM.trim(),
+                                          postingDate: item.PSTNG_DATE.trim(),
+                                          quantity: item.QUANTITY,
+                                          value: item.VAL_LOCCUR,
+                                          entryDate: item.ENTRY_DATE.trim(),
+                                          entryTime: item.ENTRY_TIME.trim(),
+                                          material: item.MATERIAL.trim(),
+                                          plant: item.PLANT.trim(),
+                                          documentYear: item.DOC_YEAR.trim(),
+                                          documentDate: item.DOC_DATE.trim(),
+                                    }
+                              )),
+                              historyTotal: data.POHISTORY_TOTALS.map(item => (
+                                    {
+                                          stoItem: item.PO_ITEM.trim(),
+                                          material: data.POITEM.find(innerItem => item.PO_ITEM.trim() === innerItem.PO_ITEM.trim()).MATERIAL.trim(),
+                                          description: data.POITEM.find(innerItem => item.PO_ITEM.trim() === innerItem.PO_ITEM.trim()).SHORT_TEXT.trim(),
+                                          quantity: data.POITEM.find(innerItem => item.PO_ITEM.trim() === innerItem.PO_ITEM.trim()).QUANTITY,
+                                          grnQuantity: item.DELIV_QTY,
+                                          value: item.VAL_GR_LOC,
                                     }
                               ))
                         }
