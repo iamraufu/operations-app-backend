@@ -36,11 +36,11 @@ const articleTrackingSchema = new mongoose.Schema({
       },
       inboundPickedQuantity: {
             type: Number,
-            default: null
+            default: 0
       },
       inboundPackedQuantity: {
             type: Number,
-            default: null
+            default: 0
       },
       inboundPicker: {
             type: String,
