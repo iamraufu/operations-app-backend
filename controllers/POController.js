@@ -206,10 +206,12 @@ const poDisplay = async (req, res) => {
                               supplyingPlant: data.POHEADER.VENDOR.trim(),
                               items: data.POITEM.map(item => (
                                     {
+                                          po: data.POHEADER.PO_NUMBER.trim(),
                                           poItem: item.PO_ITEM.trim(),
                                           material: item.MATERIAL.trim(),
                                           description: item.SHORT_TEXT.trim(),
                                           receivingPlant: item.PLANT.trim(),
+                                          storageLocation: item.STGE_LOC.trim(),
                                           quantity: item.QUANTITY,
                                           unit: item.PO_UNIT.trim(),
                                           orderPricingUnit: item.ORDERPR_UN.trim(),
