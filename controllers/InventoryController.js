@@ -129,7 +129,7 @@ const removeStock = async (req, res) => {
             // Till above
 
             // inventoryItem.quantity -= quantity;
-            inventoryItem.onHold -= quantity;
+            // inventoryItem.onHold -= quantity;
             inventoryItem.updatedAt = new Date()
 
             await inventoryItem.save();
