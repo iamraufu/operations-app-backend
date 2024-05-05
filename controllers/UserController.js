@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 const register = async (req, res) => {
       try {
             const { email } = req.body
-            const userExist = Boolean(await UserModel.findOne({ email }))
+            const userExist = Boolean(await UserModel.findOne({ email: email.trim() }))
 
             if (!userExist) {
                   const salt = await bcrypt.genSalt(10);
@@ -52,8 +52,8 @@ const register = async (req, res) => {
 const login = async (req, res) => {
       try {
             const { email, password } = req.body
-            const user = await UserModel.findOne({ email })
-            const userWithoutPassword = await UserModel.findOne({ email }).select(" -password")
+            const user = await UserModel.findOne({ email: email.trim() })
+            const userWithoutPassword = await UserModel.findOne({ email: email.trim() }).select(" -password")
             const userExist = Boolean(user)
 
             if (!userExist) {
@@ -269,7 +269,7 @@ const update = async (req, res) => {
                   });
             }
 
-            if(!password && newPassword){
+            if (!password && newPassword) {
                   return res.status(401).json({
                         status: false,
                         message: "Please enter old password"
