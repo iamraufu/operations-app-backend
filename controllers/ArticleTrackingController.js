@@ -14,28 +14,29 @@ const postArticleTracking = async (req, res) => {
             let articleInTracking = await ArticleTrackingModel.findOne(filter)
             const isAlreadyArticleInTracking = Boolean(articleInTracking)
 
-            if((articleInTracking.inboundPickedQuantity + inboundPickedQuantity) > quantity){
-                  return res.status(409).json({
-                        status: false,
-                        message: `Inbound Picked Quantity exceeds quantity`
-                  })
-            }
-
-            if((articleInTracking.inboundPackedQuantity + inboundPackedQuantity) > articleInTracking.inboundPickedQuantity){
-                  return res.status(409).json({
-                        status: false,
-                        message: `Inbound Packed Quantity exceeds Inbound Picked Quantity`
-                  })
-            }
-
-            if((articleInTracking.inboundPackedQuantity + inboundPackedQuantity) > quantity){
-                  return res.status(409).json({
-                        status: false,
-                        message: `Inbound Packed Quantity exceeds quantity`
-                  })
-            }
-
             if (isAlreadyArticleInTracking) {
+
+                  if((articleInTracking.inboundPickedQuantity + inboundPickedQuantity) > quantity){
+                        return res.status(409).json({
+                              status: false,
+                              message: `Inbound Picked Quantity exceeds quantity`
+                        })
+                  }
+      
+                  if((articleInTracking.inboundPackedQuantity + inboundPackedQuantity) > articleInTracking.inboundPickedQuantity){
+                        return res.status(409).json({
+                              status: false,
+                              message: `Inbound Packed Quantity exceeds Inbound Picked Quantity`
+                        })
+                  }
+      
+                  if((articleInTracking.inboundPackedQuantity + inboundPackedQuantity) > quantity){
+                        return res.status(409).json({
+                              status: false,
+                              message: `Inbound Packed Quantity exceeds quantity`
+                        })
+                  }
+
                   articleInTracking.inboundPickedQuantity += inboundPickedQuantity ? inboundPickedQuantity : 0
                   articleInTracking.inboundPackedQuantity += inboundPackedQuantity ? inboundPackedQuantity : 0
 
