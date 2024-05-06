@@ -71,6 +71,7 @@ const updateArticleTracking = async (req, res) => {
             const {
                   po,
                   sto,
+                  code,
                   picker,
                   pickerId,
                   packer,
