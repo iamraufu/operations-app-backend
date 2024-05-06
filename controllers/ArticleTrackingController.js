@@ -69,6 +69,7 @@ const postArticleTracking = async (req, res) => {
 const updateArticleTracking = async (req, res) => {
       try {
             const {
+                  po,
                   sto,
                   picker,
                   pickerId,
@@ -82,18 +83,19 @@ const updateArticleTracking = async (req, res) => {
                   status
             } = req.body
 
-            // console.log(req.body);
-
             const filter = {
-                  sto
+                  po: po,
+                  sto: sto,
+                  code
             }
 
-            const ArticleTracking = await ArticleTrackingModel.findOne(filter)
+            let articleInTracking = await ArticleTrackingModel.findOne(filter)
+            const isAlreadyArticleInTracking = Boolean(articleInTracking)
 
-            if (ArticleTracking === null) {
+            if (!isAlreadyArticleInTracking) {
                   return res.status(404).json({
                         status: false,
-                        message: `STO id incorrect`
+                        message: `Article Tracking Not Found`
                   })
             }
 
@@ -150,26 +152,26 @@ const updateArticleTracking = async (req, res) => {
             // }
 
             else {
-                  ArticleTracking.inboundPicker = picker ? picker : ArticleTracking.inboundPicker || null
-                  ArticleTracking.inboundPickerId = pickerId ? pickerId : ArticleTracking.inboundPickerId || null
-                  ArticleTracking.inboundPacker = packer ? packer : ArticleTracking.inboundPacker || null
-                  ArticleTracking.inboundPackerId = packerId ? packerId : ArticleTracking.inboundPackerId || null
-                  ArticleTracking.inboundPickingStartingTime = pickingStartingTime ? pickingStartingTime : ArticleTracking.inboundPickingStartingTime || null
-                  ArticleTracking.inboundPickingEndingTime = pickingEndingTime ? pickingEndingTime : ArticleTracking.inboundPickingEndingTime || null
-                  ArticleTracking.inboundPackingStartingTime = packingStartingTime ? packingStartingTime : ArticleTracking.inboundPackingStartingTime || null
-                  ArticleTracking.inboundPackingEndingTime = packingEndingTime ? packingEndingTime : ArticleTracking.inboundPackingEndingTime || null
-                  ArticleTracking.pickedQuantity = pickedQuantity ? pickedQuantity : ArticleTracking.pickedQuantity || null
-                  ArticleTracking.status = status ? status : ArticleTracking.status || null
-                  ArticleTracking.updatedAt = new Date()
+                  articleInTracking.inboundPicker = picker ? picker : articleInTracking.inboundPicker || null
+                  articleInTracking.inboundPickerId = pickerId ? pickerId : articleInTracking.inboundPickerId || null
+                  articleInTracking.inboundPacker = packer ? packer : articleInTracking.inboundPacker || null
+                  articleInTracking.inboundPackerId = packerId ? packerId : articleInTracking.inboundPackerId || null
+                  articleInTracking.inboundPickingStartingTime = pickingStartingTime ? pickingStartingTime : articleInTracking.inboundPickingStartingTime || null
+                  articleInTracking.inboundPickingEndingTime = pickingEndingTime ? pickingEndingTime : articleInTracking.inboundPickingEndingTime || null
+                  articleInTracking.inboundPackingStartingTime = packingStartingTime ? packingStartingTime : articleInTracking.inboundPackingStartingTime || null
+                  articleInTracking.inboundPackingEndingTime = packingEndingTime ? packingEndingTime : articleInTracking.inboundPackingEndingTime || null
+                  articleInTracking.pickedQuantity = pickedQuantity ? pickedQuantity : articleInTracking.pickedQuantity || null
+                  articleInTracking.status = status ? status : articleInTracking.status || null
+                  articleInTracking.updatedAt = new Date()
             }
 
-            await ArticleTracking.save()
+            await articleInTracking.save()
 
             return res.status(201).send(
                   {
                         status: true,
                         message: "Updated Article Tracking",
-                        data: ArticleTracking
+                        data: articleInTracking
                   })
       }
       catch (err) {
