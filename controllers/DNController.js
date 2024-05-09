@@ -9,7 +9,7 @@ const createDN = async (req, res) => {
                   method: 'POST',
                   body: JSON.stringify({sto})
             }
-            const response = await fetch('http://202.74.246.133:81/sap/qs/create_dn.php', requestOptions)
+            const response = await fetch(`${process.env.SAP_QS}create_dn.php`, requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E' && data?.RETURN.find(result => result.NUMBER === '001') && data?.RETURN.find(result => result.NUMBER === '051')) {
