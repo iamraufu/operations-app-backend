@@ -43,7 +43,7 @@ const postArticleTracking = async (req, res) => {
                   await articleInTracking.save()
 
                   return res.status(409).send({
-                        status: false,
+                        status: true,
                         message: `Material ${code} with quantity of ${quantity} of ${po || sto} has been tracked`,
                         data: articleInTracking
                   })
