@@ -4,9 +4,10 @@ const mongoose = require('mongoose')
 // Assign a product to ready for shelving
 const assignToReadyForShelving = async (req, res) => {
       try {
-            const { po, code, quantity, receivedQuantity } = req.body
+            const { po, sto, code, quantity, receivedQuantity } = req.body
             const filter = {
-                  po,
+                  po: po || "",
+                  sto: sto || "",
                   code,
                   quantity
             }

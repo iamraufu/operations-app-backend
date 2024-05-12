@@ -3,7 +3,9 @@ const mongoose = require("mongoose")
 const productShelvingSchema = new mongoose.Schema({
       po: {
             type: String,
-            required: true,
+      },
+      sto: {
+            type: String
       },
       code: {
             type: String,
