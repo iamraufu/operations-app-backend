@@ -6,8 +6,8 @@ const assignToReadyForShelving = async (req, res) => {
       try {
             const { po, sto, code, quantity, receivedQuantity } = req.body
             const filter = {
-                  po: po || "",
-                  sto: sto || "",
+                  po,
+                  sto,
                   code,
                   quantity
             }
