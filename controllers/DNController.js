@@ -9,6 +9,7 @@ const createDN = async (req, res) => {
                   method: 'POST',
                   body: JSON.stringify({sto})
             }
+            
             const response = await fetch(`${process.env.SAP_QS}create_dn.php`, requestOptions)
             const data = await response.json()
 
@@ -18,10 +19,21 @@ const createDN = async (req, res) => {
                         message: 'Delivery Note not created as DN cannot be created against PO'
                   })
             }
+
             else if (data?.RETURN[0]?.TYPE === 'E' && data?.RETURN.find(result => result.NUMBER === '001') && data?.RETURN.find(result => result.NUMBER === '420')) {
                   res.status(404).json({
                         status: false,
                         message: 'Delivery Note not created as DN has already created with this STO'
+                  })
+            }
+            
+            else if(data?.RETURN[0]?.TYPE === 'E'){
+                  res.status(404).json({
+                        status: false,
+                        message: 'Delivery Note not created',
+                        data: data.RETURN.map(item => ({
+                              message: item.MESSAGE.trim()
+                        }))
                   })
             }
             else {
@@ -32,7 +44,8 @@ const createDN = async (req, res) => {
 
                   let STOTracking = await STOTrackingModel.findOne(filter)
 
-                  if (STOTracking === null) {
+                  if (!STOTracking) {
+
                         return res.status(404).json({
                               status: false,
                               message: `STO tracking status not updated but converted to DN`,

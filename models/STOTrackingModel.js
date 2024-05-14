@@ -9,12 +9,10 @@ const stoTrackingSchema = new mongoose.Schema({
       dn: {
             type: String,
             default: '',
-            immutable: true
       },
       grn: {
             type: String,
             default: '',
-            immutable: true
       },
       createdOnSAP: {
             type: String,
