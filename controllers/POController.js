@@ -16,7 +16,7 @@ const poList = async (req, res) => {
                   })
             }
 
-            const response = await fetch(`${process.env.SAP_QS}get_po.php`, requestOptions)
+            const response = await fetch(`${process.env.SAP_PROD}get_po.php`, requestOptions)
             const data = await response.json()
 
             if (data.PO_FOUND > 0) {
@@ -87,7 +87,7 @@ const poReleased = async (req, res) => {
                   body: JSON.stringify({ po: req.body.po })
             }
 
-            const response = await fetch(`${process.env.SAP_QS}get_po_released.php`, requestOptions)
+            const response = await fetch(`${process.env.SAP_PROD}get_po_released.php`, requestOptions)
             const data = await response.json()
 
             if (data === 'Could not open connection') {
@@ -130,7 +130,7 @@ const poDisplay = async (req, res) => {
                   body: JSON.stringify({ po: req.body.po })
             }
 
-            const response = await fetch(`${process.env.SAP_QS}po_display.php`, requestOptions)
+            const response = await fetch(`${process.env.SAP_PROD}po_display.php`, requestOptions)
             const data = await response.json()
 
             if (data === 'Could not open connection') {
