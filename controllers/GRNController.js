@@ -241,46 +241,11 @@ const TPN = async (req, res) => {
                   })
             }
             else {
-                  const filter = {
-                        sto
-                  }
-
-                  let STOTracking = await STOTrackingModel.findOne(filter)
-
-                  if (STOTracking === null) {
-                        return res.status(200).json({
-                              status: true,
-                              message: `STO tracking status not updated but converted to GRN`,
-                              data: {
-                                    grn: data.MATERIALDOCUMENT.trim(),
-                                    documentYear: data.MATDOCUMENTYEAR.trim(),
-                                    items: data.GOODSMVT_ITEM.map(item => ({
-                                          material: item.MATERIAL.trim(),
-                                          plant: item.PLANT.trim(),
-                                          storageLocation: item.STGE_LOC.trim(),
-                                          movementType: item.MOVE_TYPE.trim(),
-                                          entryQuantity: item.ENTRY_QNT,
-                                          entryUOM: item.ENTRY_UOM.trim(),
-                                          entryUOMISO: item.ENTRY_UOM_ISO.trim(),
-                                          po: item.PO_NUMBER.trim(),
-                                          poItem: item.PO_ITEM.trim(),
-                                          movementIndicator: item.MVT_IND.trim()
-                                    })
-                                    )
-                              }
-                        })
-                  }
-                  else {
-                        STOTracking.status = "in grn"
-                        STOTracking.grn = data.MATERIALDOCUMENT.trim()
-                  }
-
-                  await STOTracking.save()
 
                   res.status(200).json({
                         status: true,
                         data: {
-                              grn: data.MATERIALDOCUMENT.trim(),
+                              tpn: data.MATERIALDOCUMENT.trim(),
                               documentYear: data.MATDOCUMENTYEAR.trim(),
                               items: data.GOODSMVT_ITEM.map(item => ({
                                     material: item.MATERIAL.trim(),
@@ -290,9 +255,9 @@ const TPN = async (req, res) => {
                                     entryQuantity: item.ENTRY_QNT,
                                     entryUOM: item.ENTRY_UOM.trim(),
                                     entryUOMISO: item.ENTRY_UOM_ISO.trim(),
-                                    po: item.PO_NUMBER.trim(),
-                                    poItem: item.PO_ITEM.trim(),
-                                    movementIndicator: item.MVT_IND.trim()
+                                    sto: item.PO_NUMBER.trim(),
+                                    stoItem: item.PO_ITEM.trim(),
+                                    dn: item.DELIV_NUMB_TO_SEARCH.trim(),
                               })
                               )
                         }
