@@ -27,7 +27,7 @@ const POGRN = async (req, res) => {
                   body: JSON.stringify(bodyDetails)
             }
 
-            const response = await fetch(`${process.env.SAP_PROD}create_grn.php`, requestOptions)
+            const response = await fetch(`${process.env.SAP_PROD}create_grn_from_po.php`, requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E') {
@@ -113,7 +113,9 @@ const STOGRN = async (req, res) => {
                         movementType: item.movementType,
                         movementIndicator: item.movementIndicator,
                         po: item.sto,
+                        dn: item.dn,
                         poItem: item.stoItem,
+                        dnItem: item.dnItem,
                         material: item.material,
                         plant: item.plant,
                         storageLocation: item.storageLocation,
@@ -127,7 +129,7 @@ const STOGRN = async (req, res) => {
                   method: 'POST',
                   body: JSON.stringify(bodyDetails)
             }
-            const response = await fetch(`${process.env.SAP_PROD}create_grn.php`, requestOptions)
+            const response = await fetch(`${process.env.SAP_PROD}create_grn_from_sto.php`, requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E') {
