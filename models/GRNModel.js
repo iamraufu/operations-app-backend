@@ -15,7 +15,6 @@ const grnSchema = new mongoose.Schema({
       createdAt: {
             type: Date,
             default: new Date(),
-            immutable: true
       },
       updatedAt: {
             type: Date
