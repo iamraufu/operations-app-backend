@@ -231,7 +231,7 @@ const TPN = async (req, res) => {
                   method: 'POST',
                   body: JSON.stringify(bodyDetails)
             }
-            const response = await fetch(`${process.env.SAP_PROD}create_grn_from_sto.php`, requestOptions)
+            const response = await fetch(`${process.env.SAP_PROD}create_tpn.php`, requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E') {
