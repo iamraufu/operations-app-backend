@@ -44,8 +44,8 @@ const POGRN = async (req, res) => {
                   let POTracking = await POTrackingModel.findOne(filter)
 
                   if (POTracking === null) {
-                        return res.status(404).json({
-                              status: false,
+                        return res.status(200).json({
+                              status: true,
                               message: `PO tracking status not updated but converted to GRN`,
                               data: {
                                     grn: data.MATERIALDOCUMENT.trim(),
@@ -144,8 +144,8 @@ const STOGRN = async (req, res) => {
                   let STOTracking = await STOTrackingModel.findOne(filter)
 
                   if (STOTracking === null) {
-                        return res.status(404).json({
-                              status: false,
+                        return res.status(200).json({
+                              status: true,
                               message: `STO tracking status not updated but converted to GRN`,
                               data: {
                                     grn: data.MATERIALDOCUMENT.trim(),
