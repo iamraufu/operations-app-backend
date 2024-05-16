@@ -205,6 +205,108 @@ const STOGRN = async (req, res) => {
       }
 }
 
+const TPN = async (req, res) => {
+      try {
+            const dn = req.body[0].dn
+
+            const bodyDetails = {
+                  "GRNDocument": dn,
+                  "GRNData": req.body.map(item => ({
+                        po: item.sto,
+                        poItem: item.stoItem,
+                        dn: item.dn,
+                        dnItem: item.dnItem,
+                        material: item.material,
+                        plant: item.plant,
+                        movementType: item.movementType,
+                        movementIndicator: item.movementIndicator,
+                        storageLocation: item.storageLocation,
+                        quantity: item.quantity,
+                        uom: item.uom,
+                        uomIso: item.uomIso
+                  }))
+            }
+
+            const requestOptions = {
+                  method: 'POST',
+                  body: JSON.stringify(bodyDetails)
+            }
+            const response = await fetch(`${process.env.SAP_PROD}create_grn_from_sto.php`, requestOptions)
+            const data = await response.json()
+
+            if (data?.RETURN[0]?.TYPE === 'E') {
+                  res.status(404).json({
+                        status: false,
+                        message: data.RETURN[0].MESSAGE.trim()
+                  })
+            }
+            else {
+                  const filter = {
+                        sto
+                  }
+
+                  let STOTracking = await STOTrackingModel.findOne(filter)
+
+                  if (STOTracking === null) {
+                        return res.status(200).json({
+                              status: true,
+                              message: `STO tracking status not updated but converted to GRN`,
+                              data: {
+                                    grn: data.MATERIALDOCUMENT.trim(),
+                                    documentYear: data.MATDOCUMENTYEAR.trim(),
+                                    items: data.GOODSMVT_ITEM.map(item => ({
+                                          material: item.MATERIAL.trim(),
+                                          plant: item.PLANT.trim(),
+                                          storageLocation: item.STGE_LOC.trim(),
+                                          movementType: item.MOVE_TYPE.trim(),
+                                          entryQuantity: item.ENTRY_QNT,
+                                          entryUOM: item.ENTRY_UOM.trim(),
+                                          entryUOMISO: item.ENTRY_UOM_ISO.trim(),
+                                          po: item.PO_NUMBER.trim(),
+                                          poItem: item.PO_ITEM.trim(),
+                                          movementIndicator: item.MVT_IND.trim()
+                                    })
+                                    )
+                              }
+                        })
+                  }
+                  else {
+                        STOTracking.status = "in grn"
+                        STOTracking.grn = data.MATERIALDOCUMENT.trim()
+                  }
+
+                  await STOTracking.save()
+
+                  res.status(200).json({
+                        status: true,
+                        data: {
+                              grn: data.MATERIALDOCUMENT.trim(),
+                              documentYear: data.MATDOCUMENTYEAR.trim(),
+                              items: data.GOODSMVT_ITEM.map(item => ({
+                                    material: item.MATERIAL.trim(),
+                                    plant: item.PLANT.trim(),
+                                    storageLocation: item.STGE_LOC.trim(),
+                                    movementType: item.MOVE_TYPE.trim(),
+                                    entryQuantity: item.ENTRY_QNT,
+                                    entryUOM: item.ENTRY_UOM.trim(),
+                                    entryUOMISO: item.ENTRY_UOM_ISO.trim(),
+                                    po: item.PO_NUMBER.trim(),
+                                    poItem: item.PO_ITEM.trim(),
+                                    movementIndicator: item.MVT_IND.trim()
+                              })
+                              )
+                        }
+                  })
+            }
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err.message === 'fetch failed' ? 'MIS Logged Off the PC where BAPI is Hosted' : err}`
+            })
+      }
+}
+
 const pendingPOForGRN = async (req, res) => {
       try {
 
@@ -338,5 +440,6 @@ module.exports = {
       updatePendingPOForGRN,
       getPendingPOForGRN,
       POGRN,
-      STOGRN
+      STOGRN,
+      TPN
 }
