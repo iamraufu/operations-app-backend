@@ -20,6 +20,14 @@ const productShelvingSchema = new mongoose.Schema({
             required: true,
             default: new Date()
       },
+      batch: {
+            type: String,
+            default: null
+      },
+      expiryDate: {
+            type: Date,
+            default: null
+      },
       userId: {
             type: String,
             required: true
