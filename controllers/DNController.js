@@ -146,6 +146,8 @@ const dnDisplay = async (req, res) => {
                                           dn: item.VBELN.trim(),
                                           dnItem: item.POSNR.trim(),
                                           createdBy: item.ERNAM.trim(),
+                                          supplyingPlant: data.ET_DELIVERY_HEADER[0].VSTEL.trim(),
+                                          receivingPlant: data.ET_DELIVERY_HEADER[0].KUNNR.trim(),
                                           material: item.MATNR.trim(),
                                           description: item.ARKTX.trim(),
                                           quantity: item.LFIMG,
