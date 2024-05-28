@@ -144,7 +144,7 @@ const dnDisplay = async (req, res) => {
                                     {
                                           sto: item.VGBEL.trim(),
                                           dn: item.VBELN.trim(),
-                                          item: item.POSNR.trim(),
+                                          dnItem: item.POSNR.trim(),
                                           createdBy: item.ERNAM.trim(),
                                           material: item.MATNR.trim(),
                                           description: item.ARKTX.trim(),
