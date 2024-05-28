@@ -7,10 +7,10 @@ const createDN = async (req, res) => {
 
             const requestOptions = {
                   method: 'POST',
-                  body: JSON.stringify({sto})
+                  body: JSON.stringify({ sto })
             }
-            
-            const response = await fetch(`${process.env.SAP_PROD}create_dn.php`, requestOptions)
+
+            const response = await fetch(`${process.env.SAP_QS}create_dn.php`, requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E' && data?.RETURN.find(result => result.NUMBER === '001') && data?.RETURN.find(result => result.NUMBER === '051')) {
@@ -26,8 +26,8 @@ const createDN = async (req, res) => {
                         message: 'Delivery Note not created as DN has already created with this STO'
                   })
             }
-            
-            else if(data?.RETURN[0]?.TYPE === 'E'){
+
+            else if (data?.RETURN[0]?.TYPE === 'E') {
                   res.status(404).json({
                         status: false,
                         message: 'Delivery Note not created',
@@ -95,11 +95,76 @@ const createDN = async (req, res) => {
       catch (err) {
             res.status(500).json({
                   status: false,
-                  message: `${err.message === 'fetch failed' ? 'MIS Logged Off the PC where BAPI is Hosted': err}`
+                  message: `${err.message === 'fetch failed' ? 'MIS Logged Off the PC where BAPI is Hosted' : err}`
+            })
+      }
+}
+
+const dnDisplay = async (req, res) => {
+      try {
+            const { dn } = req.body
+
+            const requestOptions = {
+                  method: 'POST',
+                  body: JSON.stringify({ dn })
+            }
+
+            const response = await fetch(`${process.env.SAP_QS}dn_display.php`, requestOptions)
+            const data = await response.json()
+
+            if (data?.RETURN[0]?.TYPE === 'E') {
+                  res.status(404).json({
+                        status: false,
+                        message: 'Delivery Note not fetched',
+                        data: data.RETURN.map(item => ({
+                              message: item.MESSAGE.trim()
+                        }))
+                  })
+            }
+
+            else if (data?.RETURN[0]?.TYPE === 'I') {
+                  res.status(404).json({
+                        status: false,
+                        message: 'Delivery Note not fetched',
+                        data: data.RETURN.map(item => ({
+                              message: item.MESSAGE.trim()
+                        }))
+                  })
+            }
+
+            else {
+                  await res.status(200).json({
+                        status: true,
+                        data: {
+                              dn: data.ET_DELIVERY_HEADER[0].VBELN.trim(),
+                              createdBy: data.ET_DELIVERY_HEADER[0].ERNAM.trim(),
+                              supplyingPlant: data.ET_DELIVERY_HEADER[0].VSTEL.trim(),
+                              receivingPlant: data.ET_DELIVERY_HEADER[0].KUNNR.trim(),
+                              items: data.ET_DELIVERY_ITEM.map(item => (
+                                    {
+                                          sto: item.VGBEL.trim(),
+                                          dn: item.VBELN.trim(),
+                                          item: item.POSNR.trim(),
+                                          createdBy: item.ERNAM.trim(),
+                                          material: item.MATNR.trim(),
+                                          description: item.ARKTX.trim(),
+                                          quantity: item.LFIMG,
+                                          unit: item.MEINS.trim()
+                                    }
+                              ))
+                        }
+                  })
+            }
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err.message === 'fetch failed' ? 'MIS Logged Off the PC where BAPI is Hosted' : err}`
             })
       }
 }
 
 module.exports = {
-      createDN
+      createDN,
+      dnDisplay
 }
