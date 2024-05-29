@@ -40,7 +40,7 @@ const grnSchema = new mongoose.Schema({
                   },
                   movementIndicator: {
                         type: String,
-                        required: true
+                        default: ''
                   },
                   dn: {
                         type: String,
