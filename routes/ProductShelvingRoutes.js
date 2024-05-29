@@ -8,10 +8,12 @@ const {
       getReadyForShelving,
       updateProductInShelf,
       getPartiallyInShelf,
-      getInShelf
+      getInShelf,
+      getAllData
 } = require('../controllers/ProductShelvingController')
 
 router.post('/ready', tokenVerify, assignToReadyForShelving)
+router.get('/', tokenVerify, getAllData)
 router.get('/ready', tokenVerify, getReadyForShelving)
 router.post('/in-shelf/:id', tokenVerify, updateProductInShelf)
 router.get('/partially-in-shelf', tokenVerify, getPartiallyInShelf)

@@ -153,6 +153,19 @@ const getInShelf = async (req, res) => {
       }
 }
 
+// GET all data
+const getAllData = async (req, res) => {
+      try {
+            await search(req, res, '')
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            })
+      }
+}
+
 const search = async (req, res, status) => {
 
       let filter = {
@@ -204,5 +217,6 @@ module.exports = {
       getReadyForShelving,
       updateProductInShelf,
       getPartiallyInShelf,
-      getInShelf
+      getInShelf,
+      getAllData
 }
