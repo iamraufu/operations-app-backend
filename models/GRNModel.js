@@ -9,8 +9,7 @@ const grnSchema = new mongoose.Schema({
             type: String,
       },
       grn: {
-            type: Array,
-            Of: String,
+            type: String,
       },
       status: {
             type: String,

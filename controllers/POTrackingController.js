@@ -17,7 +17,10 @@ const postPOTracking = async (req, res) => {
                   })
             }
             else {
-                  const data = await POTrackingModel.create(req.body)
+                  const data = await POTrackingModel.create({
+                        ...req.body,
+                        createdAt: new Date()
+                  })
 
                   return res.status(201).send({
                         status: true,
@@ -73,8 +76,6 @@ const updatePOTracking = async (req, res) => {
             // POTracking.status = status
 
             // await POTracking.save()
-
-            console.log(po, req.body);
 
             let updatedPOTracking = await POTrackingModel.findOneAndUpdate
                   (

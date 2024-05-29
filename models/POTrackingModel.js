@@ -7,9 +7,8 @@ const poTrackingSchema = new mongoose.Schema({
             immutable: true
       }, 
       grn: {
-            type: String,
-            default: '',
-            immutable: true
+            type: Array,
+            Of: String,
       },
       createdOnSAP: {
             type: String,
@@ -18,8 +17,7 @@ const poTrackingSchema = new mongoose.Schema({
       },
       createdAt: {
             type: Date,
-            default: new Date(),
-            immutable: true
+            default: new Date()
       },
       updatedAt: {
             type: Date,

@@ -66,12 +66,12 @@ const POGRN = async (req, res) => {
                               }
                         })
                   }
-                  else {
+                  else {      
                         POTracking.status = "in grn"
-                        POTracking.grn = data.MATERIALDOCUMENT.trim()
+                        POTracking.grn.push( await data.MATERIALDOCUMENT.trim())
+                        POTracking.updatedAt = new Date()
+                        await POTracking.save()
                   }
-
-                  await POTracking.save()
 
                   res.status(200).json({
                         status: true,
@@ -105,10 +105,10 @@ const POGRN = async (req, res) => {
 
 const STOGRN = async (req, res) => {
       try {
-            const sto = req.body[0].sto
+            const dn = req.body[0].dn
 
             const bodyDetails = {
-                  "GRNDocument": sto,
+                  "GRNDocument": dn,
                   "GRNData": req.body.map(item => ({
                         movementType: item.movementType,
                         movementIndicator: item.movementIndicator,
@@ -170,10 +170,10 @@ const STOGRN = async (req, res) => {
                   }
                   else {
                         STOTracking.status = "in grn"
-                        STOTracking.grn = data.MATERIALDOCUMENT.trim()
+                        STOTracking.grn = await data.MATERIALDOCUMENT.trim()
+                        STOTracking.updatedAt = new Date()
+                        await STOTracking.save()
                   }
-
-                  await STOTracking.save()
 
                   res.status(200).json({
                         status: true,
@@ -275,7 +275,10 @@ const TPN = async (req, res) => {
 const pendingPOForGRN = async (req, res) => {
       try {
 
-            const grn = await GRNModel.create(req.body)
+            const grn = await GRNModel.create({
+                  ...req.body,
+                  createdAt: new Date()
+            })
 
             return res.status(201).send(
                   {
