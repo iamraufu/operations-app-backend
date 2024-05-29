@@ -5,8 +5,12 @@ const grnSchema = new mongoose.Schema({
             type: String,
             required: true
       },
-      grn: {
+      dn: {
             type: String,
+      },
+      grn: {
+            type: Array,
+            Of: String,
       },
       status: {
             type: String,
@@ -37,6 +41,12 @@ const grnSchema = new mongoose.Schema({
                   movementIndicator: {
                         type: String,
                         required: true
+                  },
+                  dn: {
+                        type: String,
+                  },
+                  dnItem: {
+                        type: String,
                   },
                   po: {
                         type: String,
