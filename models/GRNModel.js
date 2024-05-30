@@ -39,7 +39,7 @@ const grnSchema = new mongoose.Schema({
                   },
                   movementIndicator: {
                         type: String,
-                        default: ''
+                        required: true
                   },
                   dn: {
                         type: String,
@@ -68,6 +68,10 @@ const grnSchema = new mongoose.Schema({
                         required: true
                   },
                   quantity: {
+                        type: Number,
+                        required: true
+                  },
+                  netPrice: {
                         type: Number,
                         required: true
                   },
