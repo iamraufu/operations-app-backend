@@ -11,6 +11,9 @@ const grnSchema = new mongoose.Schema({
       grn: {
             type: String,
       },
+      tpn: {
+            type: String,
+      },
       status: {
             type: String,
             required: true
