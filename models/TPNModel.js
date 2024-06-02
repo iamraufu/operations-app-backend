@@ -11,10 +11,7 @@ const tpnSchema = new mongoose.Schema({
       grn: {
             type: String,
       },
-      status: {
-            type: String,
-            required: true
-      },
+
       createdBy: {
             type: mongoose.Types.ObjectId,
             ref: "User",
@@ -24,8 +21,25 @@ const tpnSchema = new mongoose.Schema({
             type: mongoose.Types.ObjectId,
             ref: "User",
       },
+      reportType: {
+            type: String,
+            required: true
+      },
+      damageType: {
+            type: String,
+      },
+      image: {
+            type: String
+      },
+      remarks: {
+            type: String
+      },
+      resolve: {
+            type: Boolean,
+            default: false
+      },
       tpnData: {
-            type: [{
+            type: {
                   movementType: {
                         type: String,
                         required: true
@@ -66,6 +80,10 @@ const tpnSchema = new mongoose.Schema({
                         type: Number,
                         required: true
                   },
+                  netPrice: {
+                        type: Number,
+                        required: true
+                  },
                   tpnQuantity: {
                         type: Number,
                         required: true
@@ -77,25 +95,8 @@ const tpnSchema = new mongoose.Schema({
                   uomIso: {
                         type: String,
                         required: true
-                  },
-                  reportType: {
-                        type: String,
-                        required: true
-                  },
-                  damageType: {
-                        type: String,
-                  },
-                  image: {
-                        type: String
-                  },
-                  remarks: {
-                        type: String
-                  },
-                  resolve: {
-                        type: Boolean,
-                        default: false
                   }
-            }],
+            }
       }
 }, {
       timestamps: true
