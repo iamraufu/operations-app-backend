@@ -66,9 +66,23 @@ const register = async (req, res) => {
 // User Login
 const login = async (req, res) => {
       try {
-            const { email, password } = req.body
-            const user = await UserModel.findOne({ email: email.trim() })
-            const userWithoutPassword = await UserModel.findOne({ email: email.trim() }).select(" -password")
+            const { userId, password } = req.body
+            const user = await UserModel.findOne(
+                  {
+                        $or: [
+                              { email: userId.trim() },
+                              { staffId: userId.trim() }
+                        ]
+                  }
+            )
+            const userWithoutPassword = await UserModel.findOne(
+                  {
+                        $or: [
+                              { email: userId.trim() },
+                              { staffId: userId.trim() }
+                        ]
+                  }
+            ).select(" -password")
             const userExist = Boolean(user)
 
             if (!userExist) {
