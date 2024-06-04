@@ -16,7 +16,7 @@ const stoList = async (req, res) => {
                   )
             }
 
-            const response = await fetch(`${process.env.SAP_QS}get_po.php`, requestOptions)
+            const response = await fetch(`${process.env.SAP_PROD}get_po.php`, requestOptions)
             const data = await response.json()
 
             if (data.PO_FOUND > 0) {
@@ -100,7 +100,7 @@ const multipleStoList = async (req, res) => {
                         )
                   }
 
-                  return fetch(`${process.env.SAP_QS}get_po.php`, requestOptions)
+                  return fetch(`${process.env.SAP_PROD}get_po.php`, requestOptions)
             })
 
             const responses = await Promise.all(requests)
@@ -162,7 +162,7 @@ const stoDisplay = async (req, res) => {
                   body: JSON.stringify({ sto: req.body.sto })
             }
 
-            const response = await fetch(`${process.env.SAP_QS}sto_display.php`, requestOptions)
+            const response = await fetch(`${process.env.SAP_PROD}sto_display.php`, requestOptions)
             const data = await response.json()
 
             if (data === 'Could not open connection') {

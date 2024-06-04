@@ -10,7 +10,7 @@ const createDN = async (req, res) => {
                   body: JSON.stringify({ sto })
             }
 
-            const response = await fetch(`${process.env.SAP_QS}create_dn.php`, requestOptions)
+            const response = await fetch(`${process.env.SAP_PROD}create_dn.php`, requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E' && data?.RETURN.find(result => result.NUMBER === '001') && data?.RETURN.find(result => result.NUMBER === '051')) {
@@ -109,7 +109,7 @@ const dnDisplay = async (req, res) => {
                   body: JSON.stringify({ dn })
             }
 
-            const response = await fetch(`${process.env.SAP_QS}dn_display.php`, requestOptions)
+            const response = await fetch(`${process.env.SAP_PROD}dn_display.php`, requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E') {

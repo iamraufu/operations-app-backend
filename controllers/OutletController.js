@@ -3,7 +3,7 @@ const outlets = async (req, res) => {
       const fetchData = async () => {
 
             try {
-                  const response = await fetch(`${process.env.SAP_QS}get_outlets.php`)
+                  const response = await fetch(`${process.env.SAP_PROD}get_outlets.php`)
                   const data = await response.json()
 
                   const outlets = await data.IT_SITE.length > 0 ? await data.IT_SITE.map(outlet => (

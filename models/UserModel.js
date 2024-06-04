@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
       email: {
             type: String,
             unique: true,
-            required: true,
+            // required: true,
             immutable: true
       },
       password: {
@@ -18,7 +18,8 @@ const userSchema = new mongoose.Schema({
       },
       staffId: {
             type: Number,
-            required: true
+            required: true,
+            immutable: true
       },
       site: {
             type: Array,
