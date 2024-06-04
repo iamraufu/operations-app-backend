@@ -7,8 +7,23 @@ const mongoose = require("mongoose");
 // Register a new user
 const register = async (req, res) => {
       try {
-            const { email } = req.body
-            const userExist = Boolean(await UserModel.findOne({ email: email.trim() }))
+            const { email, staffId } = req.body
+
+            if (!email.length > 0 && !staffId.length > 0) {
+                  return res.status(404).send({
+                        status: false,
+                        message: `Email or Staff Id required`
+                  })
+            }
+
+            const userExist = Boolean(await UserModel.findOne(
+                  {
+                        $or: [
+                              { email: email.trim() },
+                              { staffId: staffId.trim() }
+                        ]
+                  }
+            ))
 
             if (!userExist) {
                   const salt = await bcrypt.genSalt(10);
@@ -36,7 +51,7 @@ const register = async (req, res) => {
             else {
                   return res.status(409).send({
                         status: false,
-                        message: `User exist with ${email}`
+                        message: `User exist with ${email || staffId}`
                   })
             }
       }

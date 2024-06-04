@@ -17,8 +17,9 @@ const userSchema = new mongoose.Schema({
             required: true
       },
       staffId: {
-            type: Number,
+            type: String,
             // required: true,
+            unique: true,
             immutable: true
       },
       site: {
