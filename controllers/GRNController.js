@@ -68,7 +68,7 @@ const POGRN = async (req, res) => {
                   }
                   else {      
                         POTracking.status = "in grn"
-                        POTracking.grn.push( await data.MATERIALDOCUMENT.trim())
+                        // POTracking.grn.push(await data.MATERIALDOCUMENT.trim())
                         POTracking.updatedAt = new Date()
                         await POTracking.save()
                   }
@@ -106,6 +106,7 @@ const POGRN = async (req, res) => {
 const STOGRN = async (req, res) => {
       try {
             const dn = req.body[0].dn
+            const sto = req.body[0].sto
 
             const bodyDetails = {
                   "GRNDocument": dn,
