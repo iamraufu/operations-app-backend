@@ -31,6 +31,7 @@ const userSchema = new mongoose.Schema({
       role: {
             type: String,  // admin or user etc.
             default: "user",
+            ref: "Role"
       },
       hasPermission: {
             type: Array,

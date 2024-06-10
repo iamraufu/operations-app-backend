@@ -235,7 +235,7 @@ const stoDisplay = async (req, res) => {
                               createdDate: data.POHEADER.CREAT_DATE.trim(),
                               createdBy: data.POHEADER.CREATED_BY.trim(),
                               documentDate: data.POHEADER.DOC_DATE.trim(),
-                              supplyingPlant: data.POHEADER.VENDOR.trim(),
+                              supplyingPlant: data.POHEADER.VENDOR.trim().length > 0 ? data.POHEADER.VENDOR.trim(): data.POHEADER.SUPPL_PLNT.trim(),
                               items: data.POITEM.map(item => (
                                     {
                                           sto: data.POHEADER.PO_NUMBER.trim(),
