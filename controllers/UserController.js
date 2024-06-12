@@ -9,29 +9,33 @@ const register = async (req, res) => {
       try {
             const { email, staffId } = req.body
 
-            if (!email.length > 0 && !staffId.length > 0) {
+            if (!(email?.length > 0 || staffId?.length > 0)) {
                   return res.status(404).send({
                         status: false,
                         message: `Email or Staff Id required`
                   })
             }
 
-            const userExist = Boolean(await UserModel.findOne(
+            const user = await UserModel.findOne(
                   {
                         $or: [
-                              { email: email.trim() },
-                              { staffId: staffId.trim() }
+                              { email: { $ne: null, $ne: '', $eq: email?.trim() } },
+                              { staffId: { $ne: null, $ne: '', $eq: staffId?.trim() } }
                         ]
                   }
-            ))
+            )
+            
+            const userExist = Boolean(user)            
 
             if (!userExist) {
                   const salt = await bcrypt.genSalt(10);
                   const passwordHash = await bcrypt.hash(req.body.password, salt);
-
+                  
                   let user = await UserModel.create(
                         {
                               ...req.body,
+                              email: email.trim().length > 0 ? email.trim() : staffId.trim(),
+                              staffId: staffId.trim().length > 0 ? staffId.trim() : email.trim(),
                               password: passwordHash
                         }
                   );
