@@ -15,17 +15,20 @@ const productShelvingSchema = new mongoose.Schema({
             type: String,
             required: true
       },
-      date: {
-            type: Date,
-            required: true,
-            default: new Date()
-      },
       batch: {
             type: String,
             default: null
       },
       expiryDate: {
             type: Date,
+            default: null
+      },
+      mfgDate: {
+            type: Date,
+            default: null
+      },
+      mrp: {
+            type: Number,
             default: null
       },
       userId: {
@@ -99,6 +102,8 @@ const productShelvingSchema = new mongoose.Schema({
             }],
             default: []
       }
+},{
+      timestamps: true
 })
 
 module.exports = mongoose.model("ProductShelving", productShelvingSchema)
