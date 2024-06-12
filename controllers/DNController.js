@@ -166,7 +166,75 @@ const dnDisplay = async (req, res) => {
       }
 }
 
+const dnUpdate = async (req, res) => {
+      try {
+            const requestOptions = {
+                  method: 'POST',
+                  body: JSON.stringify(
+                        {
+                              dn: req.body.dn,
+                              DNData: req.body.dnData
+                        }
+                  )
+            }
+
+            const response = await fetch(`${process.env.SAP_PROD}create_dn_update.php`, requestOptions)
+            const data = await response.json()
+            const SAPError = await data.RETURN.filter(data => data.TYPE === "E")
+            const SAPSuccess = await data.RETURN.filter(data => data.TYPE === "S")
+            const SAPDNUpdatedFail = await data.RETURN.filter(data => data.NUMBER === "347")
+            const SAPDNUpdatedSuccessful = await data.RETURN.filter(data => data.NUMBER === "311")
+            
+            if(SAPError.length > 0) {
+                  res.status(400).json({
+                        status: false,
+                        message: 'DN Quantity not edited',
+                        data: SAPError.map(item => ({
+                              message: item.MESSAGE.trim()
+                        }))
+                  })
+            }
+
+            else if(SAPDNUpdatedFail.length > 0) {
+                  res.status(400).json({
+                        status: false,
+                        message: 'DN Quantity already edited',
+                        data: SAPDNUpdatedFail.map(item => ({
+                              message: item.MESSAGE.trim()
+                        }))
+                  })
+            }
+
+            else if(SAPDNUpdatedSuccessful.length > 0) {
+                  res.status(201).json({
+                        status: true,
+                        message: `DN Edited`,
+                        data: SAPDNUpdatedSuccessful.map(item => ({
+                              message: item.MESSAGE.trim()
+                        }))
+                  })
+            }
+            
+            else if(SAPSuccess.length > 0) {
+                  res.status(400).json({
+                        status: false,
+                        message: `DN Quantity not edited`,
+                        data: SAPSuccess.map(item => ({
+                              message: item.MESSAGE.trim()
+                        }))
+                  })
+            }
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err.message === 'fetch failed' ? 'MIS Logged Off the PC where BAPI is Hosted' : err}`
+            })
+      }
+}
+
 module.exports = {
       createDN,
-      dnDisplay
+      dnDisplay,
+      dnUpdate
 }

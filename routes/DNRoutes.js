@@ -5,10 +5,12 @@ const { tokenVerify } = require('../utilities/tokenVerify')
 
 const {
       createDN,
-      dnDisplay
+      dnDisplay,
+      dnUpdate
 } = require('../controllers/DNController')
 
 router.post('/create', tokenVerify, createDN)
 router.post('/display', tokenVerify, dnDisplay)
+router.post('/update', tokenVerify, dnUpdate)
 
 module.exports = router
