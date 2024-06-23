@@ -27,7 +27,7 @@ const POGRN = async (req, res) => {
                   body: JSON.stringify(bodyDetails)
             }
 
-            const response = await fetch(`${process.env.SAP_PROD}create_grn_from_po.php`, requestOptions)
+            const response = await fetch(`${process.env.SAP_QS}create_grn_from_po.php`, requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E') {
@@ -66,10 +66,13 @@ const POGRN = async (req, res) => {
                               }
                         })
                   }
-                  else {      
+                  else {
                         POTracking.status = "in grn"
-                        // POTracking.grn.push(await data.MATERIALDOCUMENT.trim())
+                        console.log(data.MATERIALDOCUMENT.trim());
+                        POTracking.grn.push(data.MATERIALDOCUMENT.trim())
+                        console.log(POTracking.grn);
                         POTracking.updatedAt = new Date()
+                        console.log(POTracking);
                         await POTracking.save()
                   }
 
@@ -130,7 +133,10 @@ const STOGRN = async (req, res) => {
                   method: 'POST',
                   body: JSON.stringify(bodyDetails)
             }
-            const response = await fetch(`${process.env.SAP_PROD}create_grn_from_sto.php`, requestOptions)
+
+            console.log(requestOptions);
+
+            const response = await fetch(`${process.env.SAP_QS}create_grn_from_sto.php`, requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E') {
@@ -199,6 +205,7 @@ const STOGRN = async (req, res) => {
             }
       }
       catch (err) {
+            console.log(err);
             res.status(500).json({
                   status: false,
                   message: `${err.message === 'fetch failed' ? 'MIS Logged Off the PC where BAPI is Hosted' : err}`
@@ -232,7 +239,7 @@ const TPN = async (req, res) => {
                   method: 'POST',
                   body: JSON.stringify(bodyDetails)
             }
-            const response = await fetch(`${process.env.SAP_PROD}create_tpn.php`, requestOptions)
+            const response = await fetch(`${process.env.SAP_QS}create_tpn.php`, requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E') {
@@ -404,10 +411,54 @@ const search = async (req, res, status) => {
       }
 }
 
+const getAllPendingPOForGRN = async (req, res) => {
+      try {
+            const { filter } = req.body
+            
+            const pageSize = +req.body.query.pageSize || 10;
+            const currentPage = +req.body.query.currentPage || 1;
+            const sortBy = req.body.query.sortBy || '_id'; // _id or description or code or po or etc.
+            const sortOrder = req.body.query.sortOrder || 'desc'; // asc or desc
+
+            const totalItems = await GRNModel.find(filter).countDocuments();
+            const items = await GRNModel.find(filter)
+                  .skip((pageSize * (currentPage - 1)))
+                  .limit(pageSize)
+                  .sort({ [sortBy]: sortOrder })
+                  .exec()
+
+            const responseObject = {
+                  status: true,
+                  totalPages: Math.ceil(totalItems / pageSize),
+                  totalItems,
+                  items
+            };
+
+            if (items.length) {
+                  return res.status(200).json(responseObject);
+            }
+
+            else {
+                  return res.status(401).json({
+                        status: false,
+                        message: "Nothing found",
+                        items
+                  });
+            }
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            })
+      }
+}
+
 module.exports = {
       pendingPOForGRN,
       updatePendingPOForGRN,
       getPendingPOForGRN,
+      getAllPendingPOForGRN,
       POGRN,
       STOGRN,
       TPN

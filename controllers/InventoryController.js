@@ -304,10 +304,54 @@ const removeHoldStock = async (req, res) => {
       }
 }
 
+const getAllInventory = async (req, res) => {
+      try {
+            const { filter } = req.body
+            
+            const pageSize = +req.body.query.pageSize || 10;
+            const currentPage = +req.body.query.currentPage || 1;
+            const sortBy = req.body.query.sortBy || '_id'; // _id or description or code or po or etc.
+            const sortOrder = req.body.query.sortOrder || 'desc'; // asc or desc
+
+            const totalItems = await InventoryModel.find(filter).countDocuments();
+            const items = await InventoryModel.find(filter)
+                  .skip((pageSize * (currentPage - 1)))
+                  .limit(pageSize)
+                  .sort({ [sortBy]: sortOrder })
+                  .exec()
+
+            const responseObject = {
+                  status: true,
+                  totalPages: Math.ceil(totalItems / pageSize),
+                  totalItems,
+                  items
+            };
+
+            if (items.length) {
+                  return res.status(200).json(responseObject);
+            }
+
+            else {
+                  return res.status(401).json({
+                        status: false,
+                        message: "Nothing found",
+                        items
+                  });
+            }
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            });
+      }
+}
+
 module.exports = {
       addStock,
       removeStock,
       addHoldStock,
       removeHoldStock,
-      getStock
+      getStock,
+      getAllInventory
 }

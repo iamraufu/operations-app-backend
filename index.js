@@ -66,5 +66,5 @@ app.use('/api/send-sms', SMSRoutes) // SMS API
 connectDB()
 
 app.listen(port, () => {
-      console.log(`MongoDB connected and backend is running on port ${port}!`);
+      console.log(`MongoDB connected and production backend is running on port ${port}!`);
 });

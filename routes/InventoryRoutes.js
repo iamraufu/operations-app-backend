@@ -8,10 +8,12 @@ const {
       removeStock,
       addHoldStock,
       removeHoldStock,
-      getStock
+      getStock,
+      getAllInventory
 } = require('../controllers/InventoryController')
 
 router.post('/', tokenVerify, addStock)
+router.post('/all', tokenVerify, getAllInventory)
 router.get('/', tokenVerify, getStock)
 router.post('/hold', tokenVerify, addHoldStock)
 router.delete('/hold', tokenVerify, removeHoldStock)
