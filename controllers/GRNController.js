@@ -27,7 +27,7 @@ const POGRN = async (req, res) => {
                   body: JSON.stringify(bodyDetails)
             }
 
-            const response = await fetch(`${process.env.SAP_QS}create_grn_from_po.php`, requestOptions)
+            const response = await fetch(`${process.env.SAP_PROD}create_grn_from_po.php`, requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E') {
@@ -136,7 +136,7 @@ const STOGRN = async (req, res) => {
 
             console.log(requestOptions);
 
-            const response = await fetch(`${process.env.SAP_QS}create_grn_from_sto.php`, requestOptions)
+            const response = await fetch(`${process.env.SAP_PROD}create_grn_from_sto.php`, requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E') {
@@ -239,7 +239,7 @@ const TPN = async (req, res) => {
                   method: 'POST',
                   body: JSON.stringify(bodyDetails)
             }
-            const response = await fetch(`${process.env.SAP_QS}create_tpn.php`, requestOptions)
+            const response = await fetch(`${process.env.SAP_PROD}create_tpn.php`, requestOptions)
             const data = await response.json()
 
             if (data?.RETURN[0]?.TYPE === 'E') {
