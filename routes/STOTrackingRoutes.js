@@ -15,12 +15,14 @@ const {
       getStoInboundPicked,
       getStoInboundPacked,
       getStoInGRN,
-      getStoInTransit
+      getStoInTransit,
+      getAllSTOTracking
 } = require('../controllers/STOTrackingController')
 
 router.post('/', tokenVerify, postSTOTracking)
 router.patch('/update', tokenVerify, updateSTOTracking)
 router.get('/', tokenVerify, getSTOTracking)
+router.post('/all', tokenVerify, getAllSTOTracking)
 router.get('/pending-for-dn', tokenVerify, getStoPendingForDN)
 router.get('/in-dn', tokenVerify, getStoInDN)
 router.get('/assigned', tokenVerify, getStoAssigned)
