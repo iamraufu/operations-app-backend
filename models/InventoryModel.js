@@ -47,6 +47,14 @@ const inventorySchema = new mongoose.Schema({
                         type: String,
                         default: null
                   },
+                  mfgDate: {
+                        type: Date,
+                        default: null
+                  },
+                  mrp: {
+                        type: Number,
+                        default: null
+                  },
                   expiryDate: {
                         type: Date,
                         default: null

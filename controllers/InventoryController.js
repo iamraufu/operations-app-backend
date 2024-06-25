@@ -10,7 +10,9 @@ const addStock = async (req, res) => {
                   bin,
                   gondola,
                   batch,
-                  expiryDate
+                  expiryDate,
+                  mfgDate,
+                  mrp
             } = req.body
 
             const filter = {
@@ -35,7 +37,9 @@ const addStock = async (req, res) => {
                               {
                                     batch,
                                     expiryDate,
-                                    quantity
+                                    quantity,
+                                    mfgDate,
+                                    mrp
                               }
                         ]
                   }
@@ -56,7 +60,9 @@ const addStock = async (req, res) => {
                   inventoryItem.tracking.push({
                         batch,
                         expiryDate,
-                        quantity
+                        quantity,
+                        mfgDate,
+                        mrp
                   })
 
                   await inventoryItem.save();
