@@ -181,6 +181,45 @@ const groupInventoryArticles = async (articles, site) => {
       return articlesInInventory
 }
 
+
+const getVendorDetails = async (req, res) => {
+      const {vendor} = req.body
+      console.log(vendor);
+
+      try {
+            const response = await fetch(`${process.env.SAP_PROD}vendor_details.php`, {
+              method: "POST",
+      
+              body: new URLSearchParams({
+                vendor: vendor,
+              }),
+            });
+            
+      
+            if (response.ok) {
+              const responseData = await response.json();
+              res.status(202).json({
+                  status: true,
+                  vendor: responseData,
+                  message: "vendor found"
+            })
+     
+            } else {
+                  res.status(404).json({
+                        status: false,
+                        message: "vendor not found"
+                  })
+            }
+          } catch (error) {
+            console.log(error);
+            res.status(404).json({
+                  status: false,
+                  message: "vendor not fosssund"
+            })
+          }
+}
+
 module.exports = {
-      pickingSTO
+      pickingSTO,
+      getVendorDetails
 }
