@@ -7,12 +7,18 @@ const {
       addTempData,
       getAllTempData,
       updateTempData,
-      deleteTempData
+      deleteTempData,
+      createOrUpdateTempData,
+      getAllTempDataByPost
 } = require('../controllers/TempDataController')
 
 router.post('/', tokenVerify, addTempData)
 router.get('/', tokenVerify, getAllTempData)
 router.patch('/:id', tokenVerify, updateTempData)
 router.delete('/:id', tokenVerify, deleteTempData)
+
+router.post('/upsert', tokenVerify, createOrUpdateTempData)
+router.post('/getall', tokenVerify, getAllTempDataByPost)
+
 
 module.exports = router

@@ -163,9 +163,152 @@ const search = async (req, res) => {
       }
 }
 
+
+
+// by upol
+
+const getAllTempDataByPost = async (req, res) => {
+      const { po, userId, type}  = req.body
+
+      try {
+            const items = await TempDataModel.findOne({
+                      "userId": userId,
+                      "data.0.po": po,
+                      "type": type
+            })
+            console.log(items);
+            if(items){                  
+                  return res.status(200).json({
+                        status: true,
+                        _id: items._id,
+                        items:items.data,
+                        count: items.data.length,
+                        message: "Data found"
+                  });
+            }else{
+                  return res.status(200).json({
+                        status: true,
+                        items: [],
+                        count: 0,
+                        message: "Data not found"
+                  });
+
+            }
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            })
+      }
+     
+
+}
+
+
+const createOrUpdateTempData = async (req, res) => {
+
+      let filter = {}
+
+      const articleObj = req.body
+
+      if(articleObj.type === "grn data" ){
+
+            filter = {
+                        userId:articleObj.userId, 
+                        type:articleObj.type,
+                        "data.po": articleObj.po,
+                        // "data.material": articleObj.material
+                     }
+      }
+
+      // console.log(filter);
+
+
+      const mongoData = await TempDataModel.findOne(filter)
+
+      // console.log({mongoData});
+
+
+      try {
+            if(!mongoData){
+
+                  const formattedData = {
+                        userId:articleObj.userId, 
+                        type:articleObj.type, 
+                        data:[
+                              articleObj
+                        ]
+                  }
+
+                  const tempData = await TempDataModel.create(formattedData)
+                  await res.status(201).json({
+                        status: true,
+                        message: "Added to Temp Data",
+                        tempData
+                  })
+            }
+
+            if(mongoData){
+                  const materialFound = mongoData.data.find( item => item.material === req.body.material )
+
+                  const index = mongoData.data.findIndex(item => item.material === req.body.material );
+
+                  // console.log({index});
+
+                  let key = `data.${index}.quantity`
+
+                  if(materialFound){
+                        const tempData = await TempDataModel.findOneAndUpdate(
+                              filter,
+                              {
+                                  $inc: { [key]: req.body.quantity }
+                              },
+                              { new: true }
+                          );
+      
+                          
+                          await res.status(201).json({
+                              status: true,
+                              message: "Updated to Temp Data",
+                        })
+                  }else{
+                        mongoData.data.push(articleObj)
+                        await mongoData.save()
+                        await res.status(201).json({
+                              status: true,
+                              message: "Updated to Temp Data",
+                        })
+                  }
+            }
+
+
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            })
+      }
+
+      // try {
+      //       await search(req, res)
+      // }
+      // catch (err) {
+      //       res.status(500).json({
+      //             status: false,
+      //             message: `${err}`
+      //       })
+      // }
+}
+
+
+
 module.exports = {
       addTempData,
       getAllTempData,
       updateTempData,
-      deleteTempData
+      deleteTempData,
+      createOrUpdateTempData,
+      getAllTempDataByPost
 }
