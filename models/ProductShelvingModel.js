@@ -13,7 +13,8 @@ const productShelvingSchema = new mongoose.Schema({
       },
       description: {
             type: String,
-            required: true
+            default: "description not available",
+            // required: true
       },
       batch: {
             type: String,
