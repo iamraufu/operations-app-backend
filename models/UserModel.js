@@ -16,6 +16,9 @@ const userSchema = new mongoose.Schema({
             type: String,
             required: true
       },
+      appVersion: {
+            type: String,
+      },
       staffId: {
             type: String,
             // required: true,
