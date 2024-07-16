@@ -158,6 +158,20 @@ const users = async (req, res) => {
       }
 }
 
+
+// GET all users with out permission only Role
+const usersWithoutPermission = async (req, res) => {
+      try {
+            await search2(req, res, '')
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            })
+      }
+}
+
 // GET all user preferences
 // const userPreferences = async (req, res) => {
 
@@ -429,11 +443,75 @@ const search = async (req, res, status) => {
       }
 }
 
+
+const search2 = async (req, res, status) => {
+
+      let filter = {
+            isDeleted: false,
+            status
+      };
+
+      if (status === '') {
+            filter = {
+                  isDeleted: false
+            };
+      }
+      if (req.query.filterBy && req.query.value) {
+            filter[req.query.filterBy] = req.query.value;
+      }
+
+      const pageSize = +req.query.pageSize || 10;
+      const currentPage = +req.query.currentPage || 1;
+      const sortBy = req.query.sortBy || '_id'; // _id or description or code or po or etc.
+      const sortOrder = req.query.sortOrder || 'desc'; // asc or desc
+
+      const totalItems = await UserModel.find(filter).countDocuments();
+      const items = await UserModel.find(filter)
+            .skip((pageSize * (currentPage - 1)))
+            .limit(pageSize)
+            .sort({ [sortBy]: sortOrder })
+            .select(" -password")
+            .lean()
+
+      // for (let i = 0; i < items.length; i++) {
+      //       const user = items[i];
+      //       const role = await RoleModel.findOne({
+      //             role: { $regex: new RegExp(user.role, "i") },
+      //       }).lean();
+      //       if (role) {
+      //             items[i] = {
+      //                   ...user,
+      //                   hasPermission: role.hasPermission,
+      //             };
+      //       }
+      // }
+
+      const responseObject = {
+            status: true,
+            totalPages: Math.ceil(totalItems / pageSize),
+            totalItems,
+            items
+      };
+
+      if (items.length) {
+            return res.status(200).json(responseObject);
+      }
+
+      else {
+            return res.status(401).json({
+                  status: false,
+                  message: "Nothing found",
+                  items
+            });
+      }
+}
+
 module.exports = {
       register,
       login,
       users,
       // userPreferences,
+      usersWithoutPermission,
       user,
       getAllPickerPacker,
       update
