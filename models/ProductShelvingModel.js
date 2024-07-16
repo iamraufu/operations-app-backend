@@ -57,6 +57,12 @@ const productShelvingSchema = new mongoose.Schema({
             required: true,
             min: 0,
       },
+      // new
+      unit: {
+            type: String,
+            // required: true,
+            default: ""
+      },
       status: {
             type: String,
             required: true,

@@ -9,6 +9,12 @@ const articleTrackingSchema = new mongoose.Schema({
             type: String,
             required: true
       },
+      // new
+      unit: {
+            type: String,
+            // required: true,
+            default: ""
+      },
       sto: {
             type: String,
             default: null
