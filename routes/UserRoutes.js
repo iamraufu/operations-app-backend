@@ -10,7 +10,8 @@ const {
       user,
       getAllPickerPacker,
       update,
-      usersWithoutPermission
+      usersWithoutPermission,
+      resetPassword
 } = require('../controllers/UserController')
 
 router.post('/', register) // Create an user
@@ -20,5 +21,6 @@ router.get('/userWithoutPermission', tokenVerify, usersWithoutPermission) // Get
 router.get('/:id', tokenVerify, user) // Get single user
 router.get('/picker-packer/:site', tokenVerify, getAllPickerPacker) // grt all picker packer
 router.patch('/:id', tokenVerify, update) // Update single user
+router.patch('/resetPass/:id', tokenVerify, resetPassword) // Update single user
 
 module.exports = router

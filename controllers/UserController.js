@@ -381,6 +381,65 @@ const update = async (req, res) => {
       }
 }
 
+
+const resetPassword = async (req,res) => {
+      const { id } = req.params
+
+      const { newPassword } = req.body
+
+      try {
+            if (!mongoose.Types.ObjectId.isValid(id)) {
+                  return res.status(404).json({
+                        status: false,
+                        message: `User Id incorrect`
+                  })
+            }
+
+            const user = await UserModel.findById(id)
+            const userExist = Boolean(user)
+
+            if (!userExist) {
+                  return res.status(401).json({
+                        status: false,
+                        message: `User doesn't exist`,
+                  });
+            }
+
+
+            const salt = await bcrypt.genSalt(10);
+            const passwordHash = await bcrypt.hash(newPassword, salt);
+
+            userDetails = {
+                  password: passwordHash,
+                  updatedAt: new Date()
+            }
+            
+
+    
+
+            let updatedUser = await UserModel.findByIdAndUpdate
+                  (
+                        id, userDetails,
+                        {
+                              new: true,
+                              runValidators: true
+                        }
+                  ).select(" -password")
+
+            res.status(201).json({
+                  status: true,
+                  message: "password reset successfully",
+                  user: updatedUser
+            })
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            })
+      }
+}
+
 const search = async (req, res, status) => {
 
       let filter = {
@@ -514,5 +573,6 @@ module.exports = {
       usersWithoutPermission,
       user,
       getAllPickerPacker,
-      update
+      update,
+      resetPassword
 }
