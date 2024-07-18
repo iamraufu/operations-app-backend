@@ -184,7 +184,7 @@ const groupInventoryArticles = async (articles, site) => {
 
 const getVendorDetails = async (req, res) => {
       const {vendor} = req.body
-      console.log(vendor);
+      // console.log(vendor);
 
       try {
             const response = await fetch(`${process.env.SAP_PROD}vendor_details.php`, {
