@@ -76,7 +76,7 @@ const search = async (req, res, status) => {
             filter[req.query.filterBy] = req.query.value;
       }
 
-      const pageSize = +req.query.pageSize || 10;
+      const pageSize = +req.query.pageSize || 1000;
       const currentPage = +req.query.currentPage || 1;
       const sortBy = req.query.sortBy || '_id'; // _id or description or code or po or etc.
       const sortOrder = req.query.sortOrder || 'desc'; // asc or desc
