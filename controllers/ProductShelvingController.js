@@ -212,11 +212,74 @@ const search = async (req, res, status) => {
       }
 }
 
+const getShelfItems = async (req, res)=> {
+      try {
+            const { filter } = req.body
+            
+            const pageSize = +req.body.query.pageSize || 10;
+            const currentPage = +req.body.query.currentPage || 1;
+            const sortBy = req.body.query.sortBy || '_id'; // _id or description or code or po or etc.
+            const sortOrder = req.body.query.sortOrder || 'desc'; // asc or desc
+
+            const totalItems = await ProductShelvingModel.find(filter).countDocuments();
+            const items = await ProductShelvingModel.aggregate([
+                  {
+                    $addFields: {
+                      remainingShelfQuantity: {
+                        $subtract: [
+                          "$receivedQuantity",
+                          {
+                            $ifNull: [
+                              {
+                                $sum: "$inShelf.quantity"
+                              },
+                              0
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ])
+                  // .find(filter)
+                  // .skip((pageSize * (currentPage - 1)))
+                  // .limit(pageSize)
+                  // .sort({ [sortBy]: sortOrder })
+                  // .exec()
+
+            const responseObject = {
+                  status: true,
+                  totalPages: Math.ceil(totalItems / pageSize),
+                  totalItems,
+                  items
+            };
+
+            if (items.length) {
+                  return res.status(200).json(responseObject);
+            }
+
+            else {
+                  return res.status(401).json({
+                        status: false,
+                        message: "Nothing found",
+                        items
+                  });
+            }
+      }
+      catch (err) {
+            res.status(500).json({
+                  status: false,
+                  message: `${err}`
+            });
+      }
+}
+
 module.exports = {
       assignToReadyForShelving,
       getReadyForShelving,
       updateProductInShelf,
       getPartiallyInShelf,
       getInShelf,
+      getShelfItems,
       getAllData
 }

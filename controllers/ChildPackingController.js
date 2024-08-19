@@ -4,7 +4,9 @@ const generateChildPackingList = async (req, res) => {
       try {
             const { sto, receivingSite } = req.body
 
-            const foundChildPackingList = await ChildPackingModel.find({ sto }).sort({ sto: -1 }).limit(1)
+            const foundChildPackingList = await ChildPackingModel.find({ sto }).sort({_id:-1}).limit(1)
+
+            // console.log({foundChildPackingList});
             let updatedCount = foundChildPackingList.length > 0 ? foundChildPackingList[0].count : 1
 
             if (foundChildPackingList.length > 0) {

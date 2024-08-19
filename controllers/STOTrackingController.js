@@ -329,32 +329,49 @@ const search = async (req, res, status) => {
 const getAllSTOTracking = async (req,res) => {
       try {
             const { filter } = req.body
+
+            console.log({filter});
             
             const pageSize = +req.body.query.pageSize || 10;
             const currentPage = +req.body.query.currentPage || 1;
             const sortBy = req.body.query.sortBy || '_id'; // _id or description or code or po or etc.
             const sortOrder = req.body.query.sortOrder || 'desc'; // asc or desc
 
-            const totalItems = await STOTrackingModel.find(filter).countDocuments();
-            const items = await STOTrackingModel.find(filter)
+            // const totalItems = await STOTrackingModel.find(filter).countDocuments();
+            const notPickedItems = await STOTrackingModel.find({...filter, $expr: { $ne: ["$pickedSku","$sku"]}})
                   .skip((pageSize * (currentPage - 1)))
                   .limit(pageSize)
                   .sort({ [sortBy]: sortOrder })
                   .exec()
 
+            const pickedItems = await STOTrackingModel.find({...filter, pickedSku: {$gt: 0}, $expr: { $ne: ["$packedSku","$sku"]}})
+            .skip((pageSize * (currentPage - 1)))
+            .limit(pageSize)
+            .sort({ [sortBy]: sortOrder })
+            .exec()
+
+            const items = await STOTrackingModel.find(filter)
+            .skip((pageSize * (currentPage - 1)))
+            .limit(pageSize)
+            .sort({ [sortBy]: sortOrder })
+            .exec()
+
+            const totalItems = notPickedItems.length + pickedItems.length
+
             const responseObject = {
                   status: true,
                   totalPages: Math.ceil(totalItems / pageSize),
+                  items,
                   totalItems,
-                  items
-            };
+                  pickedItems,
+                  notPickedItems            };
 
-            if (items.length) {
+            if (pickedItems.length || notPickedItems.length) {
                   return res.status(200).json(responseObject);
             }
 
             else {
-                  return res.status(401).json({
+                  return res.status(404).json({
                         status: false,
                         message: "Nothing found",
                         items
@@ -368,6 +385,9 @@ const getAllSTOTracking = async (req,res) => {
             });
       }
 }
+
+
+
 
 module.exports = {
       postSTOTracking,

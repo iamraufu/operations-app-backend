@@ -126,7 +126,7 @@ const removeStock = async (req, res) => {
                         i--;
                   }
                   else {
-                        item.quantity -= remainingQuantity;
+                        item.quantity -= remainingQuantity; 
                         item.updatedAt = new Date()
                         break;
                   }
@@ -137,6 +137,8 @@ const removeStock = async (req, res) => {
             // inventoryItem.quantity -= quantity;
             // inventoryItem.onHold -= quantity;
             inventoryItem.updatedAt = new Date()
+            
+            inventoryItem.quantity -= quantity
 
             await inventoryItem.save();
 

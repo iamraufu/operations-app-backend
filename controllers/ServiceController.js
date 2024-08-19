@@ -14,17 +14,18 @@ const pickingSTO = async (req, res) => {
                   if (matchedItem) {
                         return {
                               ...stoItem,
-                              quantity: stoItem.quantity - matchedItem.inboundPickedQuantity,
+                              remainingQuantity: stoItem.quantity - matchedItem.inboundPickedQuantity,
                               bins: articlesInInventory.length ? matchedBin.bins : []
                         }
                   }
                   else {
                         return {
                               ...stoItem,
+                              remainingQuantity: stoItem.quantity,
                               bins: articlesInInventory.length ? matchedBin.bins : []
                         }
                   }
-            }).filter(item => item.quantity !==0)
+            }).filter(item => item.remainingQuantity !==0 )
 
             const responseObject = {
                   status: true,
@@ -41,7 +42,7 @@ const pickingSTO = async (req, res) => {
                   return res.status(401).json({
                         status: false,
                         message: "Nothing found",
-                        items
+                        items: finalStoDetails,
                   });
             }
       }
@@ -53,13 +54,15 @@ const pickingSTO = async (req, res) => {
       }
 }
 
+
+
 const getStoDetails = async (sto) => {
       const requestOptions = {
             method: 'POST',
             body: JSON.stringify({ sto })
       }
 
-      const response = await fetch(`${process.env.SAP_QS}sto_display.php`, requestOptions)
+      const response = await fetch(`${process.env.SAP_PROD}sto_display.php`, requestOptions)
       const data = await response.json()
 
       if (data === 'Could not open connection') {

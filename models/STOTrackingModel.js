@@ -19,15 +19,15 @@ const stoTrackingSchema = new mongoose.Schema({
             required: true,
             immutable: true
       },
-      createdAt: {
-            type: Date,
-            default: new Date(),
-            immutable: true
-      },
-      updatedAt: {
-            type: Date,
-            default: null
-      },
+      // createdAt: {
+      //       type: Date,
+      //       default: new Date(),
+      //       immutable: true
+      // },
+      // updatedAt: {
+      //       type: Date,
+      //       default: null
+      // },
       deliveryDate: {
             type: Date,
             default: null
@@ -48,10 +48,14 @@ const stoTrackingSchema = new mongoose.Schema({
             type: Number,
             default: null
       },
+      packedSku: {
+            type: Number,
+            default: null
+      },
       status: {
             type: String,
             default: 'pending for dn',
-            //enum:['pending for dn', 'in dn', 'pending for grn', 'in grn', 'picker assigned', 'packer assigned', 'picker packer assigned', 'inbound picking', 'inbound packing', 'inbound picked', 'inbound packed']
+            // enum:['pending for dn', 'in dn', 'pending for grn', 'in grn', 'picker assigned', 'packer assigned', 'picker packer assigned', 'inbound picking', 'inbound packing', 'inbound picked', 'inbound packed']
       },
       picker: {
             type: String,
@@ -85,6 +89,6 @@ const stoTrackingSchema = new mongoose.Schema({
             type: Date,
             default: null,
       }
-})
+},{timestamps: true})
 
 module.exports = mongoose.model("STOTracking", stoTrackingSchema)

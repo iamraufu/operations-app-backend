@@ -9,7 +9,7 @@ const articleTrackingSchema = new mongoose.Schema({
             type: String,
             required: true
       },
-      // new
+        // new
       unit: {
             type: String,
             // required: true,
@@ -20,6 +20,10 @@ const articleTrackingSchema = new mongoose.Schema({
             default: null
       },
       dn: {
+            type: String,
+            default: null
+      },
+      dnItem: {
             type: String,
             default: null
       },
@@ -38,7 +42,7 @@ const articleTrackingSchema = new mongoose.Schema({
       status: {
             type: String,
             default: "in document",
-            //enum: ["in document", "inbound picking", "partially inbound picked", "inbound picked", "inbound packing", "inbound packed", "outbound delivering", "outbound delivered", "in transit", "ready for child packing", "partially ready for child packing", ]
+            // enum: ["in document", "inbound picking", "partially inbound picked", "inbound picked", "inbound packing", "inbound packed", "outbound delivering", "outbound delivered", "in transit", "ready for child packing", "partially ready for child packing", ]
       },
       expiryDate: {
             type: Date,
@@ -56,6 +60,10 @@ const articleTrackingSchema = new mongoose.Schema({
             type: Number,
             default: 0
       },
+      childPackedQuantity: {
+            type: Number,
+            default: null
+      },
       inboundPicker: {
             type: String,
             default: null
@@ -72,6 +80,7 @@ const articleTrackingSchema = new mongoose.Schema({
             type: String,
             default: ''
       },
+      
       inboundPickingStartingTime: {
             type: Date,
             default: null
@@ -100,6 +109,6 @@ const articleTrackingSchema = new mongoose.Schema({
             type: Date,
             default: null
       }
-})
+},{timestamps: true})
 
 module.exports = mongoose.model('ArticleTracking', articleTrackingSchema)
