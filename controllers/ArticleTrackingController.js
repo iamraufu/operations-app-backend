@@ -95,13 +95,19 @@ const upsertArticleTracking = async (req, res) => {
       code,
       quantity,
       inboundPickedQuantity,
-      inboundPackedQuantity,
     } = req.body;
 
     const filter = {
       sto,
       code,
     };
+
+    console.log({
+      sto,
+      code,
+      quantity,
+      inboundPickedQuantity,
+    });
 
     let STOTracking = await STOTrackingModel.findOne({ sto });
 

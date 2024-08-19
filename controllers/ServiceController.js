@@ -9,7 +9,8 @@ const pickingSTO = async (req, res) => {
             const articlesInInventory = await groupInventoryArticles(articles, site)
             const articleInTracking = await ArticleTrackingModel.find({ sto })
             const finalStoDetails = stoDetails.items.map(stoItem => {
-                  let matchedItem = articleInTracking.find(trackingItem => trackingItem.code === stoItem.material)
+                  let matchedItem = articleInTracking.find(trackingItem => trackingItem.code === stoItem.material && trackingItem.dnItem === "0" + stoItem.stoItem)
+                  console.log({matchedItem});
                   let matchedBin = articlesInInventory.find(inventory => inventory.material === stoItem.material)
                   if (matchedItem) {
                         return {
