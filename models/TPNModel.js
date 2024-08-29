@@ -34,6 +34,10 @@ const tpnSchema = new mongoose.Schema({
       remarks: {
             type: String
       },
+      status: {
+            type: String,
+            default: "not confirmed"
+      },
       resolve: {
             type: Boolean,
             default: false
